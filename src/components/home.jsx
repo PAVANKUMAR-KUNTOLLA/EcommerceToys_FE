@@ -1,25 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import NavbarHeader from './navbar';
-import Card from './card';
 import axios from 'axios';
+import MySlider from './slider';
+
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 const HomePage = () => {
 
     const [favouriteItems,setFavouriteItems] = useState([]);
     const [latestItems, setLatestItems] = useState([]);
-    const [current, setCurrent] = useState({"start":0, "end":3});
-
-    const displayFavouriteItems = latestItems.filter((item, id)=> id>=current.start && id<=current.end)
-    const handlePrevClick = () => {
-        if (current.start >0){
-        setCurrent({"start":current.start-1, "end":current.end-1})
-        }
-    };
-    const handleNextClick = () => {
-        if (current.end <latestItems.length-1){
-        setCurrent({"start":current.start+1, "end":current.end+1})
-        }
-    };
+   
     const handleFetchProducts = () => {
 
         // const url = "https://dummyjson.com/products/";
@@ -53,34 +44,24 @@ const HomePage = () => {
     return (   
     <>
         <NavbarHeader/>
-        <h1>Latest Products</h1>
-        <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
-          <div className="carousel-inner">
-            <div className="carousel-item active"  style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", marginBottom: "20px" }}>
-            {displayFavouriteItems.map((product, id) => (
-            <Card key={id} product={product} handleChange={handleChange} style={{ maxWidth: "100%", marginRight: "10px" }}/>
-            ))}
+        <Container maxWidth="md">
+          <Box>
+            <h1>Latest Products</h1>
+            <div style={{ marginBottom: '20px',marginLeft:'30px' }}>
+                <MySlider products={latestItems} handleChange={handleChange} />
+              </div>
+            <h1>Wishlist</h1>
+            <div style={{ marginBottom: '20px' ,marginLeft:'30px' }}>
+                <MySlider products={favouriteItems} handleChange={handleChange} />
             </div>
-          </div>
-          <a className="carousel-control-prev" href="#carouselExampleControls" role="button" onClick={handlePrevClick}>
-            <span className="carousel-control-prev-icon" aria-hidden="true" style={{ backgroundColor: 'black', color: 'white' }}></span>
-            <span className="sr-only"></span>
-          </a>
-          <a className="carousel-control-next" href="#carouselExampleControls" role="button" onClick={handleNextClick}>
-            <span className="carousel-control-next-icon" aria-hidden="true" style={{ backgroundColor: 'black', color: 'white' }}></span>
-            <span className="sr-only"></span>
-          </a>
-        </div>
-       
-        <h1>Wishlist</h1>
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", marginBottom: "20px" }}>
-            {favouriteItems.map((product, id) => (
-            <Card key={id} product={product} handleChange={handleChange} style={{ maxWidth: "100%", marginRight: "10px" }}/>
-            ))}
-        </div>
+          </Box>
+        </Container>
+
     </>
-        
+    
     );
 }
  
 export default HomePage;
+
+

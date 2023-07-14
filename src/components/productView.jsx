@@ -74,7 +74,8 @@ const ProductItemView = () => {
     };
     
     const handleAddToCartClick = () => {
-        const data={"title":currProduct.title,"is_item_in_cart": !currProduct.is_item_in_cart};
+        const data={"title":currProduct.title,"is_item_in_cart": !currProduct.is_item_in_cart,"quantity":currProduct.quantity+1};
+
         handleEditProduct(data);
     };
 
