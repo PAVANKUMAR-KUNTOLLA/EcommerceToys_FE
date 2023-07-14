@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
-import Card from "../../components/card";
 import NavbarHeader from "../../components/navbar";
 import axios from "axios";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import Card from "../../components/card";
+import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 
-const HomePage = () => {
+const FavouritePage = () => {
   const [favouriteItems, setFavouriteItems] = useState([]);
-  const [latestItems, setLatestItems] = useState([]);
 
   const handleFetchProducts = () => {
     const url = "http://127.0.0.1:8000/api/v1/products/";
@@ -25,7 +25,6 @@ const HomePage = () => {
           (product) => product.is_favourite === true
         );
         setFavouriteItems(favourite_items);
-        setLatestItems(data?.data.slice(0, 20));
         console.log("data", data);
       })
       .catch((error) => {
@@ -42,24 +41,28 @@ const HomePage = () => {
   }, []);
 
   return (
-    <Page title="home">
+    <Page title="Favourites">
       <NavbarHeader />
-      <Container maxWidth="md">
-        <Grid container spacing={2}>
-          {latestItems.map((product, id) => (
-            <Grid item key={id} xs={6} md={4} >
-              <Card product={product} handleChange={handleChange} />
-            </Grid>
-          ))}
-          {favouriteItems.map((product, id) => (
-            <Grid item key={id} xs={6} md={4}>
-              <Card product={product} handleChange={handleChange} />
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+      <Typography variant="h1">Wishlist</Typography>
+      <Grid
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}
+      >
+        {favouriteItems.map((product, id) => (
+          <Card
+            key={id}
+            product={product}
+            handleChange={handleChange}
+            style={{ maxWidth: "100%", marginRight: "10px" }}
+          />
+        ))}
+      </Grid>
     </Page>
   );
 };
 
-export default HomePage;
+export default FavouritePage;
