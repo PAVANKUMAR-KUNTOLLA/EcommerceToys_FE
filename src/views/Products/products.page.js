@@ -4,7 +4,10 @@ import axios from "axios";
 import Card from "../../components/card";
 // import NavbarHeader from "../../components/navbar";
 import Categories from "../../components/categories";
-import { Grid, Container } from "@mui/material";
+import { Grid, Container, Typography } from "@mui/material";
+
+import { privateApiGET } from "../../components/PrivateRoute";
+import Api from "../../components/Api";
 
 import { useStyles } from "../Home/home.page";
 
@@ -13,26 +16,19 @@ const ProductsPage = () => {
   const [items, setItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(["accessories"]);
 
-  const filteredItems = items.filter((item) =>
-    selectedCategory.includes(item.category)
-  );
+  const filteredItems =
+  selectedCategory.length > 0
+    ? items.filter((item) => selectedCategory.includes(item.category))
+    : items;
 
   const handleFetchProducts = () => {
-    // const url = "https://dummyjson.com/products/";
-    const url = "/api/v1/products/";
-
-    axios({
-      method: "GET",
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-    })
-      .then((res) => {
-        const { status, data } = res;
-        setItems(data?.data);
-        console.log("data", data);
+    privateApiGET(Api.products)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          console.log("data", data);
+          setItems(data?.data);
+        }
       })
       .catch((error) => {
         console.log("Error", error);
@@ -51,10 +47,8 @@ const ProductsPage = () => {
     if (selectedCategory.includes(category)) {
       let categories = selectedCategory.filter((each) => each !== category);
       setSelectedCategory(categories);
-      console.log(category, "excluded");
     } else {
       setSelectedCategory((prev) => [...prev, category]);
-      console.log(category, "included");
     }
   };
 
@@ -67,6 +61,8 @@ const ProductsPage = () => {
         isActive={selectedCategory}
       />
       <Container maxWidth="md" className={customStyles.container}>
+        <Typography variant="h1" alignItems="left" marginTop="50px">Products</Typography>
+        <hr bordertop="2px solid black" fontWeight="bold"></hr>
         <Grid container spacing={2} mt={2}>
           {filteredItems &&
             filteredItems.map((product, id) => {

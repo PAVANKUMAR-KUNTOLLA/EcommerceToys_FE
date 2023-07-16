@@ -30,6 +30,14 @@ const globalUseStyles = makeStyles((theme) => ({
       lineHeight: "27px",
     },
   },
+  globalSearch: {
+    marginTop: 15,
+    paddingRight: 0,
+    width: 300,
+  },
+  searchIcon: {
+    color: "rgba(52, 49, 76, 0.7)",
+  },
 }));
 
 const ResponsiveAppBar = ({ handleChange }) => {
@@ -48,7 +56,7 @@ const ResponsiveAppBar = ({ handleChange }) => {
   };
 
   const handleNavMenu = (value) => {
-    let path = `/${value}`;
+    let path = `/app/${value}`;
     navigate(path);
     // setAnchorElNav(null);
   };
@@ -132,12 +140,17 @@ const ResponsiveAppBar = ({ handleChange }) => {
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <TextField
-              className={globalClasses.inputLg}
-              placeholder="Search here..."
-              variant="outlined"
+              className={globalClasses.globalSearch}
+              name="globalSearch"
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
+              placeholder="Search here "
+              onChange={(e) => setSearchQuery(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon className={globalClasses.searchIcon} />
+                  </InputAdornment>
+                ),
               }}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {

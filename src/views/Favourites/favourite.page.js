@@ -4,22 +4,18 @@ import NavbarHeader from "../../components/navbar";
 import axios from "axios";
 import Card from "../../components/card";
 import { Typography } from "@mui/material";
-import { Grid } from "@mui/material";
+import { Grid,Container } from "@mui/material";
+import { useStyles } from "../Home/home.page";
+import { privateApiGET } from "../../components/PrivateRoute";
+import Api from "../../components/Api";
+
 
 const FavouritePage = () => {
+  const customStyles = useStyles();
   const [favouriteItems, setFavouriteItems] = useState([]);
 
   const handleFetchProducts = () => {
-    const url = "/api/v1/products/";
-
-    axios({
-      method: "GET",
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-    })
+    privateApiGET(Api.products)
       .then((res) => {
         const { status, data } = res;
         let favourite_items = data?.data.filter(
@@ -27,6 +23,7 @@ const FavouritePage = () => {
         );
         setFavouriteItems(favourite_items);
         console.log("data", data);
+        setFavouriteItems(favourite_items);
       })
       .catch((error) => {
         console.log("Error", error);
@@ -44,24 +41,24 @@ const FavouritePage = () => {
   return (
     <Page title="Favourites">
       <NavbarHeader />
-      <Typography variant="h1">Wishlist</Typography>
-      <Grid
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          marginBottom: "20px",
-        }}
-      >
-        {favouriteItems.map((product, id) => (
-          <Card
-            key={id}
-            product={product}
-            handleChange={handleChange}
-            style={{ maxWidth: "100%", marginRight: "10px" }}
-          />
-        ))}
-      </Grid>
+      <Container maxWidth="md" className={customStyles.container}>
+        <Typography variant="h1" alignItems="left" marginTop="50px">Wishlist</Typography>
+        <hr bordertop="2px solid black" fontWeight="bold"></hr>
+        <Grid container spacing={2} mt={2}>
+          {favouriteItems &&
+            favouriteItems.map((product, id) => {
+              return (
+                <Grid item key={id} xs={6} md={4}>
+                  <Card
+                    key={id}
+                    product={product}
+                    handleChange={handleChange}
+                  />
+                </Grid>
+              );
+            })}
+        </Grid>
+      </Container>
     </Page>
   );
 };

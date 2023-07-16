@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import ResponsiveAppBar from "../../components/AppBar";
 import { makeStyles } from "@mui/styles";
+import { privateApiGET } from "../../components/PrivateRoute";
+import Api from "../../components/Api";
 
 export const useStyles = makeStyles((theme) => ({
   container: {
@@ -38,26 +40,16 @@ const HomePage = () => {
   );
 
   const handleFetchProducts = () => {
-    const url = "/api/v1/products/";
-    setIsSearchLoading(true);
-    axios({
-      method: "GET",
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-    })
-      .then((res) => {
-        const { status, data } = res;
-        setProducts(data?.data);
-        console.log("data", data);
-        setIsSearchLoading(false);
+    privateApiGET(Api.products)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          console.log("data", data);
+          setProducts(data?.data);
+        }
       })
       .catch((error) => {
         console.log("Error", error);
-        setIsSearchLoading(true);
-        setIsSearchLoading(false);
       });
   };
 

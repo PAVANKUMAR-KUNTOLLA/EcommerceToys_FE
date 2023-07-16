@@ -7,6 +7,9 @@ import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import NavbarHeader from "../../components/navbar";
 import { makeStyles } from "@mui/styles";
 
+import { privateApiPOST } from "../../components/PrivateRoute";
+import Api from "../../components/Api";
+
 const productViewCustomStyles = makeStyles((theme)=>({
       mainBlock:{
         display: 'flex',
@@ -52,17 +55,20 @@ const productViewCustomStyles = makeStyles((theme)=>({
       rightBlock: {
         width: "40vw",
         marginRight: "10vw",
-        marginTop: "1rem",
+        marginTop:'5rem',
+        marginBottom:'auto',
         [theme.breakpoints.down('sm')]: {
           width:'80vw',
           marginLeft: "10vw",
           marginRight: "10vw",
+          marginTop: "1rem",
           
         }
       },
     
       price: {
         fontWeight: "bold",
+        marginBottom:'1rem'
       },
     
       buttonContainer: {
@@ -102,21 +108,14 @@ const ProductViewPage = () => {
   };
 
   const handleFetchProduct = (data) => {
-    const url = "/api/v1/products/";
-
-    axios({
-      data: data,
-      method: "POST",
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-    })
-      .then((res) => {
-        const { status, data } = res;
-        setCurrProduct(data?.data);
-        console.log("data", data);
+    let payload = data;
+    privateApiPOST(Api.products, payload)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          setCurrProduct(data?.data);
+          console.log(data);
+        }
       })
       .catch((error) => {
         console.log("Error", error);
@@ -124,21 +123,14 @@ const ProductViewPage = () => {
   };
 
   const handleEditProduct = (data) => {
-    const url = "/api/v1/edit_product/";
-
-    axios({
-      data: data,
-      method: "POST",
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-    })
-      .then((res) => {
-        const { status, data } = res;
-        setCurrProduct(data?.data);
-        console.log("data", data);
+    let payload = data;
+    privateApiPOST(Api.edit_product, payload)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          setCurrProduct(data?.data);
+          console.log(data);
+        }
       })
       .catch((error) => {
         console.log("Error", error);
@@ -201,7 +193,7 @@ const ProductViewPage = () => {
               </Box>
           </Box>
           <Box className={customStyles.rightBlock}>
-            <Typography variant="h3" textAlign="left">
+            <Typography variant="h3" textAlign="left" className={customStyles.Title}>
               {currProduct.title}
             </Typography>
             {currProduct && currProduct["price"] && (

@@ -6,7 +6,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 
-const options = ["Home", "Products", "Wishlist", "Cart", "Profile"];
+const options = ["Home", "Products", "Favourites", "Cart", "Profile"];
 
 const NavbarHeader = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -38,7 +38,7 @@ const NavbarHeader = () => {
             {options.map((option, index) => (
               <a
                 className="nav-link"
-                href={"/" + option.toLowerCase()}
+                href={"/app/" + option.toLowerCase()}
                 key={index}
                 style={{ marginLeft: "10px", marginRight: "10px" }}
               >

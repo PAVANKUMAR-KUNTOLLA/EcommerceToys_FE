@@ -1,7 +1,7 @@
 const config = {
   // basename: only at build time to set, and don't add '/' at end off BASENAME for breadcrumbs, also don't put only '/' use blank('') instead,
   basename: "",
-  defaultPath: "/home",
+  defaultPath: "/app/home",
   defaultPathID: "home",
   fontFamily: "Oswald sans-serif",
   textTransform: "uppercase",

@@ -8,6 +8,9 @@ import { makeStyles } from "@mui/styles";
 import { themeColors } from "../theme/themeColors";
 import config from "../config";
 
+import Api from "./Api";
+import { privateApiPOST } from "./PrivateRoute";
+
 import { formattedPrice } from "../utils/index";
 
 export const customCardStyles = makeStyles((theme) => ({
@@ -89,20 +92,14 @@ const Card = ({ product, handleChange }) => {
   const customStyles = customCardStyles();
 
   const handleEditProduct = (data) => {
-    const url = "http://127.0.0.1:8000/api/v1/edit_product/";
-
-    axios({
-      data: data,
-      method: "POST",
-      url,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        const { status, data } = res;
-        handleChange && handleChange();
-        console.log("data", data);
+    let payload = data;
+    privateApiPOST(Api.edit_product, payload)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          console.log("data", data);
+          handleChange();
+        }
       })
       .catch((error) => {
         console.log("Error", error);
@@ -119,7 +116,7 @@ const Card = ({ product, handleChange }) => {
       <Box className={customStyles.productImageBox}>
         <Link
           key={product.title}
-          to={`/products/${product.title}`}
+          to={`/app/products/${product.title.replace(/ /g, "_").toLowerCase()}`}
           state={{ title: product.title }}
         >
           <Avatar
@@ -143,7 +140,7 @@ const Card = ({ product, handleChange }) => {
 
       <Link
         key={product.title}
-        to={`/products/${product.title}`}
+        to={`/app/products/${product.title.replace(/ /g, "_").toLowerCase()}`}
         state={{ title: product.title }}
       >
         <Typography className={customStyles.productTitle}>
