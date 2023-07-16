@@ -1,28 +1,52 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Routes, Navigate, Route, Router } from "react-router-dom";
+import Loadable from "../components/Loadable";
 
-import ProductsPage from "../../src/views/Products/products.page";
-import ProductItemView from "../components/productView";
-import HomePage from "../views/Home/home.page";
-import FavouritePage from "../../src/views/Favourites/favourite.page";
-import CartPage from "../../src/views/Cart/cart.page";
-import CheckOutPage from "../components/checkOutPage";
-import ProfilePage from "../components/newNavBar";
 import config from "../config";
+
+
+const HomePage = Loadable(lazy(() => import("../views/Home/home.page")));
+
+const ProductsPage = Loadable(
+  lazy(() => import("../views/Products/products.page"))
+);
+
+const ProductViewPage = Loadable(
+  lazy(() => import("../views/Products/ProductView"))
+);
+
+const FavouritePage = Loadable(
+  lazy(() => import("../views/Favourites/favourite.page"))
+);
+
+const CartPage = Loadable(lazy(() => import("../views/Cart/cart.page")));
+
+const CheckOutPage = Loadable(
+  lazy(() => import("../../src/components/checkOutPage"))
+);
+
+const SignUpPage = Loadable(
+  lazy(() => import("../views/Login/signup.page"))
+);
+
+const SignInPage = Loadable(
+  lazy(() => import("../views/Login/signin.page"))
+);
+
 
 //-----------------------|| ROUTING RENDER ||-----------------------//
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate replace to={config.defaultPath} />} />
-      <Route path="/" element={<HomePage />} />
+      <Route path="/home" element={<HomePage />} />
       <Route path="/products" element={<ProductsPage />} />
-      <Route path="/productview" element={<ProductItemView />} />
-      <Route path="/wishlist" element={<FavouritePage />} />
+      <Route path="/products/:title" element={<ProductViewPage />} />
+      <Route path="/favourites" element={<FavouritePage />} />
       <Route path="/checkout" element={<CheckOutPage />} />
       <Route path="/cart" element={<CartPage />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/signin" element={<SignInPage />} />
     </Routes>
   );
 };

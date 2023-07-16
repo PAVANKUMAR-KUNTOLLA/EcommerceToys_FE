@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
 import axios from "axios";
 import Card from "../../components/card";
-import NavbarHeader from "../../components/navbar";
+// import NavbarHeader from "../../components/navbar";
 import Categories from "../../components/categories";
-import { Grid } from "@mui/material";
+import { Grid, Container } from "@mui/material";
+
+import { useStyles } from "../Home/home.page";
 
 const ProductsPage = () => {
+  const customStyles = useStyles();
   const [items, setItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(["accessories"]);
 
@@ -16,13 +19,14 @@ const ProductsPage = () => {
 
   const handleFetchProducts = () => {
     // const url = "https://dummyjson.com/products/";
-    const url = "http://127.0.0.1:8000/api/v1/products/";
+    const url = "/api/v1/products/";
 
     axios({
       method: "GET",
       url,
       headers: {
         "Content-Type": "application/json",
+        
       },
     })
       .then((res) => {
@@ -56,27 +60,28 @@ const ProductsPage = () => {
 
   return (
     <Page title="products">
-      <NavbarHeader />
+      {/* <NavbarHeader /> */}
       <Categories
         items={items}
         onItemClick={handleCategoryClick}
         isActive={selectedCategory}
       />
-      <Grid
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          marginBottom: "20px",
-        }}
-      >
-        {filteredItems &&
-          filteredItems.map((product, id) => {
-            return (
-              <Card key={id} product={product} handleChange={handleChange} />
-            );
-          })}
-      </Grid>
+      <Container maxWidth="md" className={customStyles.container}>
+        <Grid container spacing={2} mt={2}>
+          {filteredItems &&
+            filteredItems.map((product, id) => {
+              return (
+                <Grid item key={id} xs={6} md={4}>
+                  <Card
+                    key={id}
+                    product={product}
+                    handleChange={handleChange}
+                  />
+                </Grid>
+              );
+            })}
+        </Grid>
+      </Container>
     </Page>
   );
 };

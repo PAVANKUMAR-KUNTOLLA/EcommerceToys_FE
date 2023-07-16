@@ -5,7 +5,7 @@ const config = {
   defaultPathID: "home",
   fontFamily: "Oswald sans-serif",
   textTransform: "uppercase",
-  fontSize: "15px",
+  fontSize: 15,
   color:'#404040',
   backgroundColor:"#ffffff", // white
   borderColor: "#ede6df", //#e7ddd1 //ede6df //#efe6db

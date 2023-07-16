@@ -10,13 +10,14 @@ const FavouritePage = () => {
   const [favouriteItems, setFavouriteItems] = useState([]);
 
   const handleFetchProducts = () => {
-    const url = "http://127.0.0.1:8000/api/v1/products/";
+    const url = "/api/v1/products/";
 
     axios({
       method: "GET",
       url,
       headers: {
         "Content-Type": "application/json",
+        
       },
     })
       .then((res) => {

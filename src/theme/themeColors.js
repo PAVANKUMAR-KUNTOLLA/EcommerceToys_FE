@@ -3,11 +3,11 @@ export const themeColors = {
   darkPaper: "#000000",
 
   // Primary
-  primaryLight: "#fff8e1",
-  primaryMain: "#fe9d0b",
-  primaryDark: "#fd6c0c",
-  primary200: "#ffde82",
-  primary800: "#fe8c0b",
+  primaryLight: "#4c87df",
+  primaryMain: "#2069D8",
+  primaryDark: "#164997",
+  primary200: "#91cfff",
+  primary800: "#206ad8",
 
   // primaryLight: "#d35590",
   // primaryMain: "#9e1f63",
@@ -17,11 +17,11 @@ export const themeColors = {
   // primary50: "#ffecf4",
 
   // Secondary
-  secondaryLight: "#fce8e7",
-  secondaryMain: "#ee3518",
-  secondaryDark: "#c71a07",
-  secondary200: "#ffa690",
-  secondary800: "#e02c13",
+  secondaryLight: "#f7b74f",
+  secondaryMain: "#F5A623",
+  secondaryDark: "#ab7418",
+  secondary200: "#fdf39b",
+  secondary800: "#f5a523",
 
   // secondaryLight: "#ff9d45",
   // secondaryMain: "#f15a29",
