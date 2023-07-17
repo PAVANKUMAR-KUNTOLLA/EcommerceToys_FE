@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
 import Card from "../../components/card";
 import NavbarHeader from "../../components/navbar";
+import CategoriesCard from "../../components/categoriesCard";
 import axios from "axios";
 import {
   Box,
@@ -14,6 +15,9 @@ import ResponsiveAppBar from "../../components/AppBar";
 import { makeStyles } from "@mui/styles";
 import { privateApiGET } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
+import Categories from './../../components/categories';
+import { useDispatch,useSelector } from "react-redux";
+import { setProducts } from "../../redux/products/produtsSlice";
 
 export const useStyles = makeStyles((theme) => ({
   container: {
@@ -23,21 +27,36 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("md")]: {
       maxWidth: theme.breakpoints.values.sm,
     },
+    Typography:{
+
+    },
   },
 }));
 
 const HomePage = () => {
   const customStyles = useStyles();
 
-  const [products, setProducts] = useState([]);
+  const products = useSelector((state) => state.products.products);
+  const dispatch = useDispatch();
   const [searchItems, setSearchItems] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const favouriteItems = products.filter(
+  
+  const favouriteItems = products ? products.filter(
     (product) => product.is_favourite === true
-  );
-  const latestItems = products.filter(
+  ) : [];
+  const latestItems = products ? products.filter(
     (product) => product.is_item_in_cart === true
-  );
+  ) : [];
+
+  const selectedCategories = new Set();
+
+  const categoriesItems = products ? products.filter((item) => {
+    if (!selectedCategories.has(item.category) && item.category!="accessories") {
+      selectedCategories.add(item.category);
+      return true;
+    }
+    return false;
+  }) : [];
 
   const handleFetchProducts = () => {
     privateApiGET(Api.products)
@@ -45,7 +64,7 @@ const HomePage = () => {
         const { status, data } = response;
         if (status === 200) {
           console.log("data", data);
-          setProducts(data?.data);
+          dispatch(setProducts(data?.data));
         }
       })
       .catch((error) => {
@@ -64,7 +83,6 @@ const HomePage = () => {
           product.title.toLowerCase().startsWith(value.toLowerCase()) ===
             true || product.category.startsWith(value) === true
       );
-      console.log(value, filtered_items);
       setSearchItems(filtered_items);
     } else {
       setSearchItems([]);
@@ -79,7 +97,8 @@ const HomePage = () => {
     <Page title="home">
       <ResponsiveAppBar handleChange={handleSearchChange} />
       <Container maxWidth="md" className={customStyles.container}>
-        <Grid container spacing={2} mt={2}>
+        {products &&
+        <Grid container spacing={2} mt={3}>
           {isSearchLoading && (
             <Box
               display="flex"
@@ -100,23 +119,33 @@ const HomePage = () => {
           )}
           {searchItems.length > 0
             ? searchItems.map((product, id) => (
-                <Grid item key={id} xs={6} md={4}>
+                <Grid item key={id} xs={6} md={4} lg={3}>
                   <Card product={product} handleChange={handleChange} />
                 </Grid>
               ))
             : null}
           {latestItems.map((product, id) => (
-            <Grid item key={id} xs={6} md={4}>
+            <Grid item key={id} xs={6} md={3} lg={3}>
               <Card product={product} handleChange={handleChange} />
             </Grid>
           ))}
           {favouriteItems.map((product, id) => (
-            <Grid item key={id} xs={6} md={4}>
+            <Grid item key={id} xs={6} md={3} lg={3}>
               <Card product={product} handleChange={handleChange} />
             </Grid>
           ))}
+          <Typography variant="h1" sx={{alignItems:"center",marginTop:"50px",marginLeft:"auto",marginRight:"auto"}}>Categories</Typography>
+          <hr sx={{borderTop:"2px solid black",fontWeight:"bold",marginLeft:"auto",marginRight:"auto"}}></hr>
+          <Grid container spacing={2} mt={2}>
+              {categoriesItems.map((product,id) =>(
+                <Grid item key={id} xs={6} md={3} lg={3}>
+                  <CategoriesCard product={product} handleChange={handleChange} />
+                </Grid>
+              ))}
+          </Grid>
         </Grid>
-      </Container>
+}
+        </Container>
     </Page>
   );
 };

@@ -3,6 +3,7 @@ import Page from "../../components/Page";
 import NavbarHeader from "../../components/navbar";
 import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { Link } from "react-router-dom";
 import Message from "../../components/message";
 import { Box, Container, Grid, Avatar, Typography, TextField, useMediaQuery, Button } from "@mui/material";
@@ -29,7 +30,7 @@ const customCartStyles = makeStyles((theme) => ({
     flexDirection: "row",
     position:'relative',
   },
-  DeleteIcon:{
+  CancelIcon:{
     position: "absolute",
     top: "0px",
     right: "0px",
@@ -201,8 +202,8 @@ const CartPage = () => {
                           </Typography>
                         </Grid>
                       )}
-                       <Grid item className={customStyles.DeleteIcon} >
-                          <DeleteIcon onClick={() => handleAddToCartClick(product.title,product.is_item_in_cart)}/>
+                       <Grid item className={customStyles.CancelIcon} >
+                          <CancelOutlinedIcon onClick={() => handleAddToCartClick(product.title,product.is_item_in_cart)}/>
                         </Grid>
                     </Grid>
                   </Grid>

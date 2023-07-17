@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
 import axios from "axios";
 import Card from "../../components/card";
-// import NavbarHeader from "../../components/navbar";
+import { useLocation } from "react-router-dom";
 import Categories from "../../components/categories";
 import { Grid, Container, Typography } from "@mui/material";
 
@@ -14,7 +14,10 @@ import { useStyles } from "../Home/home.page";
 const ProductsPage = () => {
   const customStyles = useStyles();
   const [items, setItems] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(["accessories"]);
+  const location = useLocation();
+  const [selectedCategory, setSelectedCategory] = useState([location.state?.category]);
+
+
 
   const filteredItems =
   selectedCategory.length > 0

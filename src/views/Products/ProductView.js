@@ -16,7 +16,7 @@ const productViewCustomStyles = makeStyles((theme)=>({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'column', 
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
           flexDirection: 'row',
         },
       },
@@ -25,7 +25,7 @@ const productViewCustomStyles = makeStyles((theme)=>({
         marginLeft: "5vw",
         marginTop: "1rem",
         marginRight: "5vw",
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
           width:'80vw',
           marginLeft: "10vw",
           marginRight: "10vw",
@@ -57,7 +57,7 @@ const productViewCustomStyles = makeStyles((theme)=>({
         marginRight: "10vw",
         marginTop:'5rem',
         marginBottom:'auto',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
           width:'80vw',
           marginLeft: "10vw",
           marginRight: "10vw",

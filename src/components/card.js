@@ -18,12 +18,12 @@ export const customCardStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     [theme.breakpoints.up("sm")]: {
-      width: "50%",
-      height: "50%",
-    },
-    [theme.breakpoints.up("md")]: {
       width: "70%",
       height: "70%",
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "100%",
+      height: "100%",
     },
     [theme.breakpoints.up("lg")]: {
       width: "80%", // Update the width value to your desired size
