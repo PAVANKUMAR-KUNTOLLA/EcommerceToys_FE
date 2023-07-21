@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
-import Card from "../../components/card";
-import NavbarHeader from "../../components/navbar";
-import CategoriesCard from "../../components/categoriesCard";
+import ProductCard from "../../components/card";
+// import NavbarHeader from "../../components/navbar";
+import CategoriesCard from "../../components/categoryCard";
 import axios from "axios";
 import {
   Box,
@@ -15,9 +15,10 @@ import ResponsiveAppBar from "../../components/AppBar";
 import { makeStyles } from "@mui/styles";
 import { privateApiGET } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
-import Categories from './../../components/categories';
-import { useDispatch,useSelector } from "react-redux";
+import Categories from "./../../components/categories";
+import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../../redux/products/produtsSlice";
+import ProductSlider from "../../components/slider";
 
 export const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,9 +28,7 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("md")]: {
       maxWidth: theme.breakpoints.values.sm,
     },
-    Typography:{
-
-    },
+    Typography: {},
   },
 }));
 
@@ -37,26 +36,26 @@ const HomePage = () => {
   const customStyles = useStyles();
 
   const products = useSelector((state) => state.products.products);
+  const favourites = useSelector((state) => state.products.favourites);
+  const latest = useSelector((state) => state.products.latest);
   const dispatch = useDispatch();
   const [searchItems, setSearchItems] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  
-  const favouriteItems = products ? products.filter(
-    (product) => product.is_favourite === true
-  ) : [];
-  const latestItems = products ? products.filter(
-    (product) => product.is_item_in_cart === true
-  ) : [];
 
   const selectedCategories = new Set();
 
-  const categoriesItems = products ? products.filter((item) => {
-    if (!selectedCategories.has(item.category) && item.category!="accessories") {
-      selectedCategories.add(item.category);
-      return true;
-    }
-    return false;
-  }) : [];
+  const categoriesItems = products
+    ? products.filter((item) => {
+        if (
+          !selectedCategories.has(item.category) &&
+          item.category != "accessories"
+        ) {
+          selectedCategories.add(item.category);
+          return true;
+        }
+        return false;
+      })
+    : [];
 
   const handleFetchProducts = () => {
     privateApiGET(Api.products)
@@ -76,18 +75,18 @@ const HomePage = () => {
     handleFetchProducts();
   };
 
-  const handleSearchChange = (value) => {
-    if (value) {
-      let filtered_items = products.filter(
-        (product) =>
-          product.title.toLowerCase().startsWith(value.toLowerCase()) ===
-            true || product.category.startsWith(value) === true
-      );
-      setSearchItems(filtered_items);
-    } else {
-      setSearchItems([]);
-    }
-  };
+  // const handleSearchChange = (value) => {
+  //   if (value) {
+  //     let filtered_items = products.filter(
+  //       (product) =>
+  //         product.title.toLowerCase().startsWith(value.toLowerCase()) ===
+  //           true || product.category.startsWith(value) === true
+  //     );
+  //     setSearchItems(filtered_items);
+  //   } else {
+  //     setSearchItems([]);
+  //   }
+  // };
 
   useEffect(() => {
     handleFetchProducts();
@@ -95,57 +94,81 @@ const HomePage = () => {
 
   return (
     <Page title="home">
-      <ResponsiveAppBar handleChange={handleSearchChange} />
+      {/* <ResponsiveAppBar handleChange={handleSearchChange} /> */}
       <Container maxWidth="md" className={customStyles.container}>
-        {products &&
-        <Grid container spacing={2} mt={3}>
-          {isSearchLoading && (
-            <Box
-              display="flex"
-              height="100%"
-              width="100%"
-              justifyContent="center"
-              alignItems="center"
+        {products && (
+          <Grid container spacing={2} mt={3}>
+            {isSearchLoading && (
+              <Box
+                display="flex"
+                height="100%"
+                width="100%"
+                justifyContent="center"
+                alignItems="center"
+                sx={{
+                  position: "absolute",
+                  backgroundColor: "background.paper",
+                  zIndex: "10",
+                  left: 0,
+                  top: 0,
+                }}
+              >
+                <CircularProgress size={30} color="primary" />
+              </Box>
+            )}
+            {searchItems.length > 0
+              ? searchItems.map((product) => (
+                  <Grid item key={product.id} xs={6} md={4} lg={3}>
+                    <ProductCard
+                      product={product}
+                      handleChange={handleChange}
+                    />
+                  </Grid>
+                ))
+              : null}
+            {latest.map((product) => (
+              <Grid item key={product.id} xs={6} md={3} lg={3}>
+                <ProductCard product={product} handleChange={handleChange} />
+              </Grid>
+            ))}
+            {favourites.map((product) => (
+              <Grid item key={product.id} xs={6} md={3} lg={3}>
+                <ProductCard product={product} handleChange={handleChange} />
+              </Grid>
+            ))}
+            <Typography
+              variant="h1"
               sx={{
-                position: "absolute",
-                backgroundColor: "background.paper",
-                zIndex: "10",
-                left: 0,
-                top: 0,
+                alignItems: "center",
+                marginTop: "50px",
+                marginLeft: "auto",
+                marginRight: "auto",
               }}
             >
-              <CircularProgress size={30} color="primary" />
-            </Box>
-          )}
-          {searchItems.length > 0
-            ? searchItems.map((product, id) => (
-                <Grid item key={id} xs={6} md={4} lg={3}>
-                  <Card product={product} handleChange={handleChange} />
-                </Grid>
-              ))
-            : null}
-          {latestItems.map((product, id) => (
-            <Grid item key={id} xs={6} md={3} lg={3}>
-              <Card product={product} handleChange={handleChange} />
-            </Grid>
-          ))}
-          {favouriteItems.map((product, id) => (
-            <Grid item key={id} xs={6} md={3} lg={3}>
-              <Card product={product} handleChange={handleChange} />
-            </Grid>
-          ))}
-          <Typography variant="h1" sx={{alignItems:"center",marginTop:"50px",marginLeft:"auto",marginRight:"auto"}}>Categories</Typography>
-          <hr sx={{borderTop:"2px solid black",fontWeight:"bold",marginLeft:"auto",marginRight:"auto"}}></hr>
-          <Grid container spacing={2} mt={2}>
-              {categoriesItems.map((product,id) =>(
-                <Grid item key={id} xs={6} md={3} lg={3}>
-                  <CategoriesCard product={product} handleChange={handleChange} />
+              Categories
+            </Typography>
+            <hr
+              sx={{
+                borderTop: "2px solid black",
+                fontWeight: "bold",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            ></hr>
+            <Grid container spacing={2} mt={2}>
+              {categoriesItems.map((product) => (
+                <Grid item key={product.id} xs={6} md={3} lg={3}>
+                  <CategoriesCard
+                    product={product}
+                    handleChange={handleChange}
+                  />
                 </Grid>
               ))}
+            </Grid>
+            <ProductSlider products={favourites} handleChange={handleChange} />
           </Grid>
-        </Grid>
-}
-        </Container>
+        )}
+      </Container>
     </Page>
   );
 };

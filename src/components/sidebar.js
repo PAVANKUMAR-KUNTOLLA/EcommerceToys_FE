@@ -28,6 +28,13 @@ import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from "react-router-dom";
 
 
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import RestoreIcon from '@mui/icons-material/Restore';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import FolderIcon from '@mui/icons-material/Folder';
+
+
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -83,6 +90,8 @@ export default function PersistentDrawerLeft({ handleChange }) {
   const [isfullwidth, setisfullwidth] = React.useState(false);
   const navigate = useNavigate();
 
+
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -105,6 +114,12 @@ export default function PersistentDrawerLeft({ handleChange }) {
 
   const handleLinkClick = (option) => {
     navigate("/app/" + option.toLowerCase());
+  };
+
+  const [value, setValue] = React.useState('recents');
+
+  const handleNavigationClick = (event, newValue) => {
+    setValue(newValue);
   };
 
   return (
@@ -174,9 +189,28 @@ export default function PersistentDrawerLeft({ handleChange }) {
                   <PersonIcon />
                 </IconButton>
               </Box>
+
             </>
           )}
         </Toolbar>
+        <BottomNavigation sx={{ width: 500 }} value={value} onChange={handleNavigationClick}>
+            <BottomNavigationAction
+              label="Recents"
+              value="recents"
+              icon={<RestoreIcon />}
+            />
+            <BottomNavigationAction
+              label="Favorites"
+              value="favorites"
+              icon={<FavoriteIcon />}
+            />
+            <BottomNavigationAction
+              label="Nearby"
+              value="nearby"
+              icon={<LocationOnIcon />}
+            />
+            <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
+          </BottomNavigation>
       </AppBar>
       <Drawer
         sx={{
@@ -226,3 +260,27 @@ export default function PersistentDrawerLeft({ handleChange }) {
     </Box>
   );
 }
+
+
+// import * as React from 'react';
+
+
+// export default function SimpleBottomNavigation() {
+  
+//   return (
+//     <Box sx={{ width: 500 }}>
+//       <BottomNavigation
+//         showLabels
+//         value={value}
+//         onChange={(event, newValue) => {
+//           setValue(newValue);
+//         }}
+//       >
+//         <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+//         <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
+//         <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+//       </BottomNavigation>
+//     </Box>
+//   );
+// }
+

@@ -74,7 +74,7 @@ const ResponsiveAppBar = ({ handleChange }) => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: "dodgerblue" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {isMobile && <PersistentDrawerLeft handleChange={handleChange} />}
@@ -103,13 +103,14 @@ const ResponsiveAppBar = ({ handleChange }) => {
                     ),
                     endAdornment: (
                       <InputAdornment position="end">
-                        {searchQuery &&
+                        {searchQuery && (
                           <IconButton
                             color="inherit"
                             onClick={handleCancelClick}
                           >
                             <CancelIcon />
-                          </IconButton>}
+                          </IconButton>
+                        )}
                       </InputAdornment>
                     ),
                   }}
@@ -132,10 +133,7 @@ const ResponsiveAppBar = ({ handleChange }) => {
                     onClick={() => handleNavMenu(option.label.toLowerCase())}
                   >
                     {option.icon}
-                    <Typography
-                      variant="body2"
-                      className={classes.typography}
-                    >
+                    <Typography variant="body2" className={classes.typography}>
                       {option.label}
                     </Typography>
                   </Button>

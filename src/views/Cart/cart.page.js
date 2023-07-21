@@ -1,36 +1,46 @@
 import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
-import NavbarHeader from "../../components/navbar";
+// import NavbarHeader from "../../components/navbar";
 import axios from "axios";
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import DeleteIcon from "@mui/icons-material/Delete";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Link } from "react-router-dom";
 import Message from "../../components/message";
-import { Box, Container, Grid, Avatar, Typography, TextField, useMediaQuery, Button } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Avatar,
+  Typography,
+  TextField,
+  useMediaQuery,
+  Button,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
-
+import { useDispatch, useSelector } from "react-redux";
 import { privateApiGET, privateApiPOST } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
+import { useNavigate } from "react-router-dom";
 
 const customCartStyles = makeStyles((theme) => ({
   mainBlock: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'column',
-    [theme.breakpoints.up('sm')]: {
-      flexDirection: 'row',
-      marginLeft:'auto',
-      marginRight:'auto',
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "column",
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+      marginLeft: "auto",
+      marginRight: "auto",
     },
   },
   CartBlock: {
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
-    position:'relative',
+    position: "relative",
   },
-  CancelIcon:{
+  CancelIcon: {
     position: "absolute",
     top: "0px",
     right: "0px",
@@ -45,7 +55,6 @@ const customCartStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("md")]: {
       fontSize: "26px",
     },
-
   },
   ImageBlock: {
     width: "50%",
@@ -57,7 +66,7 @@ const customCartStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "space-between",
     padding: "0 1rem",
-    marginTop:'2rem',
+    marginTop: "2rem",
   },
   Image: {
     width: "100%",
@@ -80,7 +89,7 @@ const customCartStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "flex-start",
     marginTop: "1rem",
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       marginTop: "50px",
       marginBottom: "auto",
     },
@@ -88,33 +97,16 @@ const customCartStyles = makeStyles((theme) => ({
 }));
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const cart = useSelector((state) => state.products.cart);
   const matchesSm = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const customStyles = customCartStyles();
+  const navigate = useNavigate();
 
   const formattedPrice = (price) => {
     return price.toLocaleString("en-IN", {
       style: "currency",
       currency: "INR",
-    });
-  };
-
-  const handleFetchProducts = () => {
-    privateApiGET(Api.products)
-    .then((response) => {
-      const { status, data } = response;
-      if (status === 200) {
-        console.log("data", data);
-        let items = data?.data.filter(
-          (product) => product.is_item_in_cart === true
-        );
-        setCartItems(items);
-        console.log("cartItems", items);
-      }
-    })
-    .catch((error) => {
-      console.log("Error", error);
     });
   };
 
@@ -155,17 +147,18 @@ const CartPage = () => {
     handleEditProduct(data);
   };
 
-  useEffect(() => {
-    handleFetchProducts();
-  }, []);
+  const handleNav = (value) => {
+    let path = `/app/${value}`;
+    navigate(path);
+  };
 
   return (
     <Page title="Cart">
-      <NavbarHeader />
+      {/* <NavbarHeader /> */}
       <Box className={customStyles.mainBlock} maxWidth={"md"}>
         <Container maxWidth="sm">
-          {cartItems && cartItems.length > 0 ? (
-            cartItems.map((product, id) => (
+          {cart && cart.length > 0 ? (
+            cart.map((product, id) => (
               <Box key={id} my={2} marginBottom="0px">
                 <Grid container className={customStyles.CartBlock}>
                   <Grid item xs={6} className={customStyles.ImageBlock}>
@@ -183,49 +176,74 @@ const CartPage = () => {
                     </Link>
                   </Grid>
                   <Grid item xs={6} className={customStyles.ContentBlock}>
-                    <Grid container direction="column" style={{ height: "100%" }}>
+                    <Grid
+                      container
+                      direction="column"
+                      style={{ height: "100%" }}
+                    >
                       <Grid item>
-                        <Typography className={customStyles.Title}>{product.title}</Typography>
-                        <Typography className={customStyles.Price}>Price: {formattedPrice(product.price)}</Typography>
+                        <Typography className={customStyles.Title}>
+                          {product.title}
+                        </Typography>
+                        <Typography className={customStyles.Price}>
+                          Price: {formattedPrice(product.price)}
+                        </Typography>
                         <TextField
                           label="Quantity"
                           type="number"
                           value={product.quantity}
                           className={customStyles.Quantity}
-                          onChange={(e) => handleQuantityChange(product.title, e.target.value)}
+                          onChange={(e) =>
+                            handleQuantityChange(product.title, e.target.value)
+                          }
                         />
                       </Grid>
                       {!matchesSm && (
                         <Grid item>
                           <Typography className={customStyles.TotalPrice}>
-                            Total: {formattedPrice(product.price * product.quantity)}
+                            Total:{" "}
+                            {formattedPrice(product.price * product.quantity)}
                           </Typography>
                         </Grid>
                       )}
-                       <Grid item className={customStyles.CancelIcon} >
-                          <CancelOutlinedIcon onClick={() => handleAddToCartClick(product.title,product.is_item_in_cart)}/>
-                        </Grid>
+                      <Grid item className={customStyles.CancelIcon}>
+                        <CancelOutlinedIcon
+                          onClick={() =>
+                            handleAddToCartClick(
+                              product.title,
+                              product.is_item_in_cart
+                            )
+                          }
+                        />
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
                 <hr bordertop="5px solid black" fontWeight="bold"></hr>
               </Box>
-
             ))
           ) : (
             <Message>No items in cart.</Message>
           )}
         </Container>
         <Container maxWidth="xs" className={customStyles.rightBlock}>
-
           <Box>
             <Typography variant="h3" marginBottom="1rem">
-              Subtotal ₹{cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2)}
+              Subtotal ₹
+              {cart
+                .reduce((acc, item) => acc + item.quantity * item.price, 0)
+                .toFixed(2)}
             </Typography>
-            <Typography marginBottom="1rem">Tax included and shipping calculated at checkout</Typography>
-            <Typography marginBottom="1rem">Orders will be processed in INR.</Typography>
+            <Typography marginBottom="1rem">
+              Tax included and shipping calculated at checkout
+            </Typography>
+            <Typography marginBottom="1rem">
+              Orders will be processed in INR.
+            </Typography>
             <Box marginBottom="1rem">
-              <Button variant="outlined">CHECKOUT</Button>
+              <Button variant="outlined" onClick={() => handleNav("checkout")}>
+                CHECKOUT
+              </Button>
             </Box>
             <Typography marginBottom="1rem">CONTINUE SHOPPING</Typography>
           </Box>

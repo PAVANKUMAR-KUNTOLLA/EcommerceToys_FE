@@ -6,7 +6,7 @@ import { Grid, Box, Avatar, Typography, IconButton } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { themeColors } from "../theme/themeColors";
 import config from "../config";
-import Categories from './categories';
+import Categories from "./categories";
 import { Link, useNavigate } from "react-router-dom";
 
 export const customCardStyles = makeStyles((theme) => ({
@@ -40,12 +40,12 @@ export const customCardStyles = makeStyles((theme) => ({
     width: "100%",
     objectFit: "cover",
   },
-  
+
   productTitle: {
     width: "100%",
     textAlign: "center",
     justifyContent: "center",
-    textTransform:'uppercase',
+    textTransform: "uppercase",
     color: "#222222",
     marginBottom: "5px",
     [theme.breakpoints.down("md")]: {
@@ -59,21 +59,26 @@ const CategoriesCard = ({ product, handleChange }) => {
   const customStyles = customCardStyles();
   return (
     <Grid item sx={{ padding: "0px 6px" }} className={customStyles.productCard}>
-      <Box component={Link} className={customStyles.productImageBox} to="/app/products" sx={{textDecoration:"none"}} state={{category:product.category}}>
+      <Box
+        component={Link}
+        className={customStyles.productImageBox}
+        to="/app/products"
+        sx={{ textDecoration: "none" }}
+        state={{ category: product.category }}
+      >
         <Avatar
           variant="square"
           src={`https://${product.image_0}`}
           alt={product.title}
-          className={customStyles.productImage}/>
-          
-       
+          className={customStyles.productImage}
+        />
+
         <Typography variant="h3" className={customStyles.productTitle}>
           {product.category}
         </Typography>
-    </Box>
+      </Box>
     </Grid>
   );
 };
 
 export default CategoriesCard;
-

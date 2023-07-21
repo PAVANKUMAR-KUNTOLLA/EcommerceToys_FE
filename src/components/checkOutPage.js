@@ -1,9 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import OrderPayment from "../views/Cart/shipping.page";
+import { Container } from "@mui/material";
 
 const CheckOutPage = () => {
-    return ( 
-        <h1>CheckOut Page</h1>
-     );
-}
- 
+  return (
+    <Container maxWidth="md">
+      <OrderPayment />;
+    </Container>
+  );
+};
+
 export default CheckOutPage;

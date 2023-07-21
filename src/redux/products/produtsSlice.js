@@ -1,13 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { last } from "lodash";
 
-const initialState = {products:[]};
+const initialState = {products:[], favourites:[], latest:[], cart:[]};
 
 export const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
     setProducts(state, action){
-      state.products=action.payload;
+      const {products, favourites, latest, cart} = action.payload;
+      state.products= products;
+      state.favourites = favourites,
+      state.latest = latest;
+      state.cart=cart;
     }
   },
 });

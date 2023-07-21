@@ -88,7 +88,7 @@ export const customCardStyles = makeStyles((theme) => ({
   },
 }));
 
-const Card = ({ product, handleChange }) => {
+const ProductCard = ({ product, handleChange }) => {
   const customStyles = customCardStyles();
 
   const handleEditProduct = (data) => {
@@ -155,4 +155,4 @@ const Card = ({ product, handleChange }) => {
   );
 };
 
-export default Card;
+export default ProductCard;
