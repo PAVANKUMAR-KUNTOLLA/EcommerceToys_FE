@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -19,6 +19,17 @@ import { makeStyles } from "@mui/styles";
 import PersistentDrawerLeft from "./sidebar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+
+import { useParams } from "react-router-dom";
+import { privateApiGET, privateApiPOST } from "./PrivateRoute";
+import Api from "./Api";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setProducts,
+  setSearch,
+  setSearchQuery,
+  setLoadingSpin,
+} from "../redux/products/produtsSlice";
 
 const pages = ["products", "cart", "favourites"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -55,13 +66,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ResponsiveAppBar = ({ handleChange }) => {
-  const [searchQuery, setSearchQuery] = React.useState("");
+const ResponsiveAppBar = () => {
+  const [newSearchQuery, setNewSearchQuery] = useState("");
+  const searchQuery = useSelector((state) => state.products.searchQuery);
   const globalClasses = globalUseStyles();
   const classes = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const params = useParams();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSearchOn = useSelector((state) => state.products.isSearchOn);
+  const isLoadingSpin = useSelector((state) => state.products.isSearchLoading);
 
   const handleNavMenu = (value) => {
     let path = `/app/${value}`;
@@ -69,15 +85,69 @@ const ResponsiveAppBar = ({ handleChange }) => {
   };
 
   const handleCancelClick = () => {
-    setSearchQuery("");
-    handleChange(""); // Optionally, you can clear the search results by calling the handleChange function with an empty query.
+    setNewSearchQuery("");
+    dispatch(setSearchQuery(""));
+    dispatch(setSearch(false));
+    dispatch(setLoadingSpin(true));
+    // Optionally, you can clear the search results by calling the handleChange function with an empty query.
+    if (params.category) {
+      let payload = { category: params.category };
+      privateApiPOST(Api.products, payload)
+        .then((response) => {
+          const { status, data } = response;
+          if (status === 200) {
+            console.log("data", data);
+            dispatch(setProducts(data?.data));
+            dispatch(setLoadingSpin(false));
+          }
+        })
+        .catch((error) => {
+          console.log("Error", error);
+          dispatch(setLoadingSpin(false));
+        });
+    } else {
+      privateApiGET(Api.products)
+        .then((response) => {
+          const { status, data } = response;
+          if (status === 200) {
+            console.log("data", data);
+            dispatch(setProducts(data?.data));
+
+            dispatch(setLoadingSpin(false));
+          }
+        })
+        .catch((error) => {
+          console.log("Error", error);
+          dispatch(setLoadingSpin(false));
+        });
+    }
+  };
+
+  const handleFetchSearchProducts = () => {
+    dispatch(setLoadingSpin(true));
+    dispatch(setSearch(true));
+    dispatch(setSearchQuery(newSearchQuery));
+    let payload = { search: newSearchQuery };
+    privateApiPOST(Api.products, payload)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          console.log("data", data);
+          dispatch(setProducts(data?.data));
+          dispatch(setLoadingSpin(false));
+        }
+      })
+      .catch((error) => {
+        console.log("Error", error);
+        dispatch(setLoadingSpin(false));
+      });
   };
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "dodgerblue" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {isMobile && <PersistentDrawerLeft handleChange={handleChange} />}
+          {isMobile && <PersistentDrawerLeft />}
           {!isMobile && (
             <>
               <Box
@@ -92,9 +162,14 @@ const ResponsiveAppBar = ({ handleChange }) => {
                 <TextField
                   className={globalClasses.globalSearch}
                   name="globalSearch"
-                  value={searchQuery}
+                  value={newSearchQuery}
                   placeholder="Search here"
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setNewSearchQuery(e.target.value);
+                    if (!e.target.value && isSearchOn) {
+                      handleCancelClick();
+                    }
+                  }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -116,7 +191,7 @@ const ResponsiveAppBar = ({ handleChange }) => {
                   }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") {
-                      handleChange(searchQuery);
+                      newSearchQuery && handleFetchSearchProducts();
                     }
                   }}
                 />

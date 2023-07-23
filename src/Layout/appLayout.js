@@ -1,16 +1,17 @@
-import { AppBar } from '@mui/material';
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import ResponsiveAppBar from '../components/AppBar';
-import MyFooter from '../components/footer';
+import { AppBar } from "@mui/material";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import ResponsiveAppBar from "../components/AppBar";
+import MobileNavFooterPage from "./MobileNavFooter";
 
 const AppLayout = () => {
-    return ( 
+  return (
     <>
-        <ResponsiveAppBar/>
-        <Outlet/>
+      <ResponsiveAppBar />
+      <Outlet />
+      {/* <MobileNavFooterPage /> */}
     </>
-     );
-}
- 
+  );
+};
+
 export default AppLayout;

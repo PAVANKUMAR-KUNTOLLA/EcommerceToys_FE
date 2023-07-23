@@ -2,8 +2,7 @@ import React, { lazy } from "react";
 import { Outlet, Routes, Navigate, Route, Router } from "react-router-dom";
 import Loadable from "../components/Loadable";
 import PrivateRoute from "../components/PrivateRoute";
-import AppLayout from './../Layout/appLayout';
-
+import AppLayout from "./../Layout/appLayout";
 
 import config from "../config";
 
@@ -24,7 +23,7 @@ const FavouritePage = Loadable(
 const CartPage = Loadable(lazy(() => import("../views/Cart/cart.page")));
 
 const CheckOutPage = Loadable(
-  lazy(() => import("../../src/components/checkOutPage"))
+  lazy(() => import("../views/Checkout/checkout.page"))
 );
 
 const ProfilePage = Loadable(
@@ -36,7 +35,6 @@ const RegisterView = Loadable(lazy(() => import("../views/Auth/RegisterView")));
 const ResetPasswordView = Loadable(
   lazy(() => import("../views/Auth/ResetPasswordView"))
 );
-
 
 //-----------------------|| ROUTING RENDER ||-----------------------//
 const AppRoutes = () => {
@@ -53,11 +51,15 @@ const AppRoutes = () => {
       >
         <Route path="home" element={<HomePage />} />
         <Route path="products" element={<ProductsPage />} />
-        <Route path="products/:title" element={<ProductViewPage />} />
+        <Route
+          path="products/categories/:category"
+          element={<ProductsPage />}
+        />
+        <Route path="products/:id/:title" element={<ProductViewPage />} />
         <Route path="favourites" element={<FavouritePage />} />
         <Route path="checkout" element={<CheckOutPage />} />
         <Route path="cart" element={<CartPage />} />
-        <Route path="profile" element={<ProfilePage />}/>
+        <Route path="profile" element={<ProfilePage />} />
       </Route>
       <Route path="/login" element={<LoginViewPage />} />
       <Route path="/register" element={<RegisterView />} />

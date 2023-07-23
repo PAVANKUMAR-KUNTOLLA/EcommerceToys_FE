@@ -1,16 +1,24 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { Grid, Box, Avatar, Typography, IconButton } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Avatar,
+  Typography,
+  IconButton,
+  Button,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { themeColors } from "../theme/themeColors";
 import config from "../config";
 
 import Api from "./Api";
 import { privateApiPOST } from "./PrivateRoute";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setProducts } from "../redux/products/produtsSlice";
 import { formattedPrice } from "../utils/index";
 
 export const customCardStyles = makeStyles((theme) => ({
@@ -88,8 +96,10 @@ export const customCardStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductCard = ({ product, handleChange }) => {
+const ProductCard = ({ product }) => {
   const customStyles = customCardStyles();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleEditProduct = (data) => {
     let payload = data;
@@ -98,7 +108,7 @@ const ProductCard = ({ product, handleChange }) => {
         const { status, data } = response;
         if (status === 200) {
           console.log("data", data);
-          handleChange();
+          dispatch(setProducts(data?.data));
         }
       })
       .catch((error) => {
@@ -111,13 +121,17 @@ const ProductCard = ({ product, handleChange }) => {
     handleEditProduct(data);
   };
 
+  const handleProductView = (id, title) => {
+    console.log(title);
+    navigate(`/app/products/${id}/${title}`);
+  };
+
   return (
     <Grid item sx={{ padding: "0px 6px" }} className={customStyles.productCard}>
       <Box className={customStyles.productImageBox}>
-        <Link
+        <Button
           key={product.title}
-          to={`/app/products/${product.title.replace(/ /g, "_").toLowerCase()}`}
-          state={{ title: product.title }}
+          onClick={() => handleProductView(product.id, product.title)}
         >
           <Avatar
             variant="square"
@@ -125,7 +139,7 @@ const ProductCard = ({ product, handleChange }) => {
             alt={product.title}
             className={customStyles.productImage}
           />
-        </Link>
+        </Button>
         <IconButton
           className={customStyles.favouriteIcon}
           onClick={handleFavouriteClick}
@@ -138,15 +152,14 @@ const ProductCard = ({ product, handleChange }) => {
         </IconButton>
       </Box>
 
-      <Link
+      <Button
         key={product.title}
-        to={`/app/products/${product.title.replace(/ /g, "_").toLowerCase()}`}
-        state={{ title: product.title }}
+        onClick={() => handleProductView(product.id, product.title)}
       >
         <Typography className={customStyles.productTitle}>
           {product.title}
         </Typography>
-      </Link>
+      </Button>
 
       <Typography className={customStyles.productPrice}>
         {formattedPrice(product.price)}

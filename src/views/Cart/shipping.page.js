@@ -15,7 +15,7 @@ const steps = ["Login", "Address", "Payment", "Place Order"];
 export default function OrderPayment() {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
-
+  const [isLoadingSpin, setIsLoadinSpin] = useState(false);
   const isStepOptional = (step) => {
     return step === 1;
   };

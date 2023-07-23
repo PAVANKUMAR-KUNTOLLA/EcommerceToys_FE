@@ -55,16 +55,19 @@ export const customCardStyles = makeStyles((theme) => ({
   },
 }));
 
-const CategoriesCard = ({ product, handleChange }) => {
+const CategoriesCard = ({ product }) => {
   const customStyles = customCardStyles();
+  const navigate = useNavigate();
+  const handleCategoryClick = (category) => {
+    navigate(`/app/products/categories/${category}`);
+  };
   return (
     <Grid item sx={{ padding: "0px 6px" }} className={customStyles.productCard}>
       <Box
-        component={Link}
+        component="a"
         className={customStyles.productImageBox}
-        to="/app/products"
+        onClick={() => handleCategoryClick(product.category)}
         sx={{ textDecoration: "none" }}
-        state={{ category: product.category }}
       >
         <Avatar
           variant="square"
