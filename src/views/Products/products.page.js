@@ -188,7 +188,7 @@ const ProductsPage = () => {
   return (
     <Page title="products">
       <Container maxWidth="lg">
-        <Typography variant="h1" alignItems="left" marginTop="50px">
+        <Typography variant="h1" alignItems="left" marginTop="36px">
           Products
         </Typography>
         <hr bordertop="2px solid black" fontWeight="bold"></hr>

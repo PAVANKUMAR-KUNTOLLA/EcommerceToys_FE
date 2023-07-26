@@ -28,6 +28,7 @@ import DataNotFound from "../../components/DataNotFound";
 import ProductCard from "../../components/card";
 import SearchResultsPage from "../../components/SearchResults";
 import ProductSlider from "../../components/slider";
+import { thousands_separators } from "../../utils";
 
 const productViewCustomStyles = makeStyles((theme) => ({
   mainBlock: {
@@ -58,22 +59,7 @@ const productViewCustomStyles = makeStyles((theme) => ({
     width: "100%",
     height: "auto",
   },
-  prevSvgIcon: {
-    position: "absolute",
-    top: "50%",
-    left: 0,
-    transform: "translateY(-50%)",
-    cursor: "pointer",
-    zIndex: 1,
-  },
-  nextSvgIcon: {
-    position: "absolute",
-    top: "50%",
-    right: 0,
-    transform: "translateY(-50%)",
-    cursor: "pointer",
-    zIndex: 1,
-  },
+
   refImages: {
     marginTop: "1rem",
     display: "flex",
@@ -81,7 +67,10 @@ const productViewCustomStyles = makeStyles((theme) => ({
     overflowX: "scroll",
     scrollbarWidth: "none",
     msOverflowStyle: "none",
-    scrollbarColor: "transparent transparent",
+    scrollbarColor: "transparent",
+    "&::-webkit-scrollbar": {
+      width: "0px", // Hide the scrollbar for Chrome, Safari, and newer Edge
+    },
   },
   smallImage: {
     width: "100px",
@@ -101,9 +90,17 @@ const productViewCustomStyles = makeStyles((theme) => ({
     },
   },
 
+  title: {
+    fontSize: "24px",
+    fontWeight: "540",
+    lineHeight: "27px",
+    marginBottom: "16px",
+  },
   price: {
-    fontWeight: "bold",
-    marginBottom: "1rem",
+    fontWeight: "700",
+    fontSize: "21px",
+    lineHeight: "24px",
+    marginBottom: "24px",
   },
 
   buttonContainer: {
@@ -116,7 +113,38 @@ const productViewCustomStyles = makeStyles((theme) => ({
   },
 
   description: {
-    marginTop: "1rem",
+    fontSize: "21px",
+    fontWeight: "600",
+    lineHeight: "24px",
+    marginTop: "36px",
+    marginBottom: "-24px",
+  },
+  paragraph: {
+    fontSize: "16px",
+    fontWeight: "400",
+    lineHeight: "19px",
+  },
+  relevantProducts: {
+    maxWidth: "80vw",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginLeft: "auto",
+    marginRight: "auto",
+    // [theme.breakpoints.down("sm")]: {
+    //   maxWidth: "80vw",
+    // },
+  },
+  relatedProductsTitle: {
+    textTransform: "uppercase",
+    color: "#3e4152",
+    fontSize: "28px",
+    fontWeight: "700",
+    marginTop: "34px",
+    marginBottom: "10px",
+    letterSpacing: "1.5px",
+    [theme.breakpoints.down("sm")]: {
+      marginTop: "0",
+    },
   },
 }));
 
@@ -135,14 +163,6 @@ const ProductViewPage = () => {
   const [isFavLoadingSpin, setIsFavLoadingSpin] = useState(false);
   const [isCartLoadingSpin, setIsCartLoadingSpin] = useState(false);
   const customStyles = productViewCustomStyles();
-
-  const handlePrev = () => {
-    setCurrentSlide((prevSlide) => (prevSlide - 1 + 15) % 15);
-  };
-
-  const handleNext = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1 + 15) % 15);
-  };
 
   const handleSlide = (index) => {
     setCurrentSlide(index);
@@ -246,38 +266,6 @@ const ProductViewPage = () => {
                     src={`https://${currProduct[`image_${currentSlide}`]}`}
                     alt={`Slide ${currentSlide + 1}`}
                   />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`${customStyles.prevSvgIcon} icon icon-tabler icon-tabler-chevron-left`}
-                    width="84"
-                    height="84"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="#2c3e50"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    onClick={handlePrev}
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M15 6l-6 6l6 6" />
-                  </svg>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`${customStyles.nextSvgIcon} icon icon-tabler icon-tabler-chevron-right`}
-                    width="84"
-                    height="84"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="#2c3e50"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    onClick={handleNext}
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M9 6l6 6l-6 6" />
-                  </svg>
                 </Box>
               </Box>
               <Box className={customStyles.refImages}>
@@ -296,20 +284,12 @@ const ProductViewPage = () => {
               </Box>
             </Box>
             <Box className={customStyles.rightBlock}>
-              <Typography
-                variant="h3"
-                textAlign="left"
-                className={customStyles.Title}
-              >
+              <Typography className={customStyles.title}>
                 {currProduct.title}
               </Typography>
               {currProduct && currProduct["price"] && (
-                <Typography variant="span" className={customStyles.price}>
-                  Price:{" "}
-                  {currProduct["price"].toLocaleString("en-IN", {
-                    style: "currency",
-                    currency: "INR",
-                  })}
+                <Typography className={customStyles.price}>
+                  Rs. {thousands_separators(currProduct.price)}
                 </Typography>
               )}
               <Box className={customStyles.buttonContainer}>
@@ -346,20 +326,36 @@ const ProductViewPage = () => {
                   )}
                 </Button>
               </Box>
+              <Typography className={customStyles.description}>
+                Description:
+              </Typography>
               {currProduct && currProduct["description"] && (
                 <Box className={customStyles.description}>
-                  {currProduct["description"].split("\n").map((line, index) => (
-                    <Typography key={index} variant="p">
-                      {line}
-                    </Typography>
-                  ))}
+                  {currProduct["description"].split("\n").map(
+                    (line, index) =>
+                      line.trim() !== "" && (
+                        <React.Fragment key={index}>
+                          <Typography className={customStyles.paragraph}>
+                            {line}
+                          </Typography>
+                          <Typography>
+                            <br></br>
+                          </Typography>
+                        </React.Fragment>
+                      )
+                  )}
                 </Box>
               )}
             </Box>
           </Box>
           {relevantProducts.length > 0 && (
-            <Box sx={{ marginTop: "36px", marginBottom: "48px" }}>
-              <Typography varaint="h2">Related products</Typography>
+            <Box
+              sx={{ marginTop: "36px", marginBottom: "48px" }}
+              className={customStyles.relevantProducts}
+            >
+              <Typography className={customStyles.relatedProductsTitle}>
+                Related products
+              </Typography>
               <ProductSlider products={relevantProducts} />
             </Box>
           )}

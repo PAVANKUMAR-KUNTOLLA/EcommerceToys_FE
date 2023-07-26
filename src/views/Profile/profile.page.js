@@ -49,7 +49,7 @@ const customProfileStyles = makeStyles((theme) => ({
     marginLeft: "auto",
     marginRight: "auto",
     [theme.breakpoints.down("sm")]: {
-      maxWidth: "80%",
+      maxWidth: "100%",
       marginBottom: "10px",
     },
   },
@@ -76,24 +76,6 @@ const ProfilePage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // You can perform any additional logic or submit the form data here
-    console.log("Form Data:", address);
-  };
-
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
-
-  const rows = [
-    createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData("Eclair", 262, 16.0, 24, 6.0),
-    createData("Cupcake", 305, 3.7, 67, 4.3),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-  ];
-
   const handleFetchProfileData = () => {
     dispatch(setLoadingSpin(true));
     privateApiGET(Api.profile)
@@ -107,8 +89,8 @@ const ProfilePage = () => {
             id: info.id,
             name: info.name,
             email: info.email,
-            orderHistory: info.order_history,
-            visitHistory: info.visit_history,
+            orderHistory: info.orders,
+            visitHistory: info.products,
           }));
           dispatch(setLoadingSpin(false));
         }
@@ -138,12 +120,6 @@ const ProfilePage = () => {
           marginRight: "auto",
         }}
       >
-        <Typography
-          variant="h3"
-          sx={{ marginBottom: "30px", marginTop: "20px", marginLeft: "10px" }}
-        >
-          Account Details
-        </Typography>
         <hr></hr>
       </Grid>
       <Container maxWidth="lg" className={customStyles.MainBlock}>
@@ -176,7 +152,7 @@ const ProfilePage = () => {
                   marginBottom: "auto",
                 }}
               >
-                Profile
+                {userInfo.name}
               </Typography>
             </Grid>
             <TextField
@@ -194,6 +170,8 @@ const ProfilePage = () => {
               value={userInfo.email}
             />
           </Box>
+        </Container>
+        <Container maxWidth="md">
           <Accordion
             expanded={expanded === "panel1a"}
             onChange={handleAccordionChange("panel1a")}
@@ -208,11 +186,11 @@ const ProfilePage = () => {
             </AccordionSummary>
             <AccordionDetails>
               <TableContainer component={Paper} sx={{ marginTop: "35px" }}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ maxWidth: 600 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
+                      <TableCell align="left">Title</TableCell>
                       <TableCell align="left">Quantity</TableCell>
-                      <TableCell align="left">Price</TableCell>
                       <TableCell align="left">Ordered Date</TableCell>
                     </TableRow>
                   </TableHead>
@@ -225,10 +203,10 @@ const ProfilePage = () => {
                         }}
                       >
                         <TableCell component="th" scope="row">
-                          {row.product__title}
+                          {row.title}
                         </TableCell>
                         <TableCell align="left">{row.quantity}</TableCell>
-                        <TableCell align="left">{row.updated_at}</TableCell>
+                        <TableCell align="left">{row.order_date}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -245,33 +223,40 @@ const ProfilePage = () => {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>Ordered History</Typography>
+              <Typography>Viewed History</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <TableContainer component={Paper} sx={{ marginTop: "35px" }}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableContainer
+                component={Paper}
+                sx={{
+                  marginTop: "35px",
+                }}
+              >
+                <Table sx={{ maxWidth: "md" }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell align="left">Quantity</TableCell>
-                      <TableCell align="left">Price</TableCell>
-                      <TableCell align="left">Ordered Date</TableCell>
+                      <TableCell align="left">Title</TableCell>
+                      <TableCell align="left">Count</TableCell>
+                      <TableCell align="left">Viewed_at</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {userInfo["visitHistory"].map((row) => (
-                      <TableRow
-                        key={row.id}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.product__title}
-                        </TableCell>
-                        <TableCell align="left">{row.price}</TableCell>
-                        <TableCell align="left">{row.updated_at}</TableCell>
-                      </TableRow>
-                    ))}
+                    {userInfo["visitHistory"]
+                      .slice(0, Math.min(userInfo["visitHistory"].length, 10))
+                      .map((row) => (
+                        <TableRow
+                          key={row.id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.title}
+                          </TableCell>
+                          <TableCell align="left">{row.view_count}</TableCell>
+                          <TableCell align="left">{row.visited_at}</TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>

@@ -39,18 +39,23 @@ export const customCardStyles = makeStyles((theme) => ({
     height: "100%",
     width: "100%",
     objectFit: "cover",
+    cursor: "pointer",
   },
 
-  productTitle: {
+  productCategory: {
     width: "100%",
     textAlign: "center",
     justifyContent: "center",
     textTransform: "uppercase",
+    lineHeight: "35px",
+    fontSize: "21px",
     color: "#222222",
-    marginBottom: "5px",
+    fontWeight: "600",
+
     [theme.breakpoints.down("md")]: {
-      height: "20px",
-      marginBottom: "5px",
+      lineHeight: "24px",
+      fontSize: "19px",
+      textAlign: "center",
     },
   },
 }));
@@ -62,11 +67,10 @@ const CategoriesCard = ({ product }) => {
     navigate(`/app/products/categories/${category}`);
   };
   return (
-    <Grid item sx={{ padding: "0px 6px" }} className={customStyles.productCard}>
+    <Grid item className={customStyles.productCard}>
       <Box
         component="a"
         className={customStyles.productImageBox}
-        onClick={() => handleCategoryClick(product.category)}
         sx={{ textDecoration: "none" }}
       >
         <Avatar
@@ -74,9 +78,10 @@ const CategoriesCard = ({ product }) => {
           src={`https://${product.image_0}`}
           alt={product.title}
           className={customStyles.productImage}
+          onClick={() => handleCategoryClick(product.category)}
         />
 
-        <Typography variant="h3" className={customStyles.productTitle}>
+        <Typography variant="h3" className={customStyles.productCategory}>
           {product.category}
         </Typography>
       </Box>

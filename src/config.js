@@ -6,8 +6,8 @@ const config = {
   fontFamily: "Oswald sans-serif",
   textTransform: "uppercase",
   fontSize: 15,
-  color:'#404040',
-  backgroundColor:"#ffffff", // white
+  color: "#474747",
+  backgroundColor: "#ffffff", // white
   borderColor: "#ede6df", //#e7ddd1 //ede6df //#efe6db
   // backgroundColor: "#ffecf4", // Violet #fdf0f5
   // borderColor: "#edd7e1",

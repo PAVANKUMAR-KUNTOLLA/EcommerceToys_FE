@@ -18,6 +18,7 @@ import LoadingSpin from "../../components/LoadingSpin";
 import MyFooter from "./Footer";
 import AdverstiesmentImagesSlider from "./advertisement";
 import SearchResultsPage from "../../components/SearchResults";
+
 export const useStyles = makeStyles((theme) => ({
   container: {
     [theme.breakpoints.up("lg")]: {
@@ -26,7 +27,18 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("md")]: {
       maxWidth: theme.breakpoints.values.sm,
     },
-    Typography: {},
+  },
+  title: {
+    textTransform: "uppercase",
+    color: "#3e4152",
+    fontSize: "28px",
+    fontWeight: "700",
+    marginTop: "34px",
+    marginBottom: "10px",
+    letterSpacing: "1.5px",
+    [theme.breakpoints.down("sm")]: {
+      marginTop: "0",
+    },
   },
 }));
 
@@ -79,55 +91,23 @@ const HomePage = () => {
       {!isSearchOn && <AdverstiesmentImagesSlider />}
       {!isLoadingSpin && !isSearchOn ? (
         <Container maxWidth="md" className={customStyles.container}>
-          <Grid container spacing={2} mt={3}>
-            <Grid item xs={12}>
-              <Typography
-                variant="h1"
-                sx={{
-                  alignItems: "center",
-                  marginTop: "50px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                Your favourite products
-              </Typography>
-              <hr
-                sx={{
-                  borderTop: "2px solid black",
-                  fontWeight: "bold",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              ></hr>
-            </Grid>
-            {favourites.map((product) => (
-              <Grid item key={product.id} xs={6} md={3} lg={3}>
-                <ProductCard product={product} />
+          {favourites.length > 0 && (
+            <Grid container spacing={2} mt={3}>
+              <Grid item xs={12}>
+                <Typography className={customStyles.title}>
+                  Favourites
+                </Typography>
               </Grid>
-            ))}
-          </Grid>
+              {favourites.map((product) => (
+                <Grid item key={product.id} xs={6} md={3} lg={3}>
+                  <ProductCard product={product} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
           <Grid container spacing={2} mt={2}>
             <Grid item xs={12}>
-              <Typography
-                variant="h1"
-                sx={{
-                  alignItems: "center",
-                  marginTop: "50px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                Categories
-              </Typography>
-              <hr
-                sx={{
-                  borderTop: "2px solid black",
-                  fontWeight: "bold",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              ></hr>
+              <Typography className={customStyles.title}>Categories</Typography>
             </Grid>
             <Grid container spacing={2} mt={2}>
               {categoriesItems.map((product) => (
@@ -145,25 +125,9 @@ const HomePage = () => {
             sx={{ display: isSearchOn ? "none" : "flex" }}
           >
             <Grid item xs={12}>
-              <Typography
-                variant="h1"
-                sx={{
-                  alignItems: "center",
-                  marginTop: "50px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                Products you may like
+              <Typography className={customStyles.title}>
+                you may like
               </Typography>
-              <hr
-                sx={{
-                  borderTop: "2px solid black",
-                  fontWeight: "bold",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              ></hr>
             </Grid>
             <ProductSlider products={products} />
           </Grid>

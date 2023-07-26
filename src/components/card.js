@@ -19,15 +19,15 @@ import Api from "./Api";
 import { privateApiPOST } from "./PrivateRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../redux/products/produtsSlice";
-import { formattedPrice } from "../utils/index";
+import { thousands_separators } from "./../utils/index";
 
 export const customCardStyles = makeStyles((theme) => ({
   productCard: {
     width: "100%",
     height: "100%",
     [theme.breakpoints.up("sm")]: {
-      width: "70%",
-      height: "70%",
+      width: "50%",
+      height: "50%",
     },
     [theme.breakpoints.up("md")]: {
       width: "100%",
@@ -70,28 +70,27 @@ export const customCardStyles = makeStyles((theme) => ({
   },
   productTitle: {
     width: "100%",
-    height: "36px",
+    lineHeight: "27px",
+    fontSize: "14px",
     fontWeight: "400",
     overflow: "hidden",
-    textAlign: "center",
-    justifyContent: "center",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
     color: "#222222",
-    marginBottom: "5px",
+
     [theme.breakpoints.down("md")]: {
-      height: "20px",
-      marginBottom: "5px",
+      lineHeight: "24px",
+      // fontSize: "15px",
     },
   },
   productPrice: {
     width: "100%",
-    lineHeight: "18px",
-    fontSize: "13px",
-    textAlign: "center",
-    justifyContent: "center",
+    lineHeight: "21px",
+    fontSize: "16px",
     color: "#222222",
-    fontWeight: "400",
+    fontWeight: "700",
     [theme.breakpoints.down("md")]: {
-      height: "15px",
+      lineHeight: "19px",
     },
   },
 }));
@@ -117,13 +116,17 @@ const ProductCard = ({ product }) => {
   };
 
   const handleFavouriteClick = () => {
-    const data = { title: product.title, is_favourite: !product.is_favourite };
+    const data = {
+      id: product.id,
+      title: product.title,
+      is_favourite: !product.is_favourite,
+    };
     handleEditProduct(data);
   };
 
   const handleProductView = (id, title) => {
     console.log(title);
-    navigate(`/app/products/${id}/${title}`);
+    navigate(`/app/products/${id}/${title.replace(/ /g, "-")}/`);
   };
 
   return (
@@ -152,17 +155,12 @@ const ProductCard = ({ product }) => {
         </IconButton>
       </Box>
 
-      <Button
-        key={product.title}
-        onClick={() => handleProductView(product.id, product.title)}
-      >
-        <Typography className={customStyles.productTitle}>
-          {product.title}
-        </Typography>
-      </Button>
+      <Typography className={customStyles.productTitle}>
+        {product.title}
+      </Typography>
 
       <Typography className={customStyles.productPrice}>
-        {formattedPrice(product.price)}
+        Rs. {thousands_separators(product.price)}
       </Typography>
     </Grid>
   );

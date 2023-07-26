@@ -12,6 +12,11 @@ const AdverstismentCustomStyles = makeStyles((theme) => ({
     width: "100%",
     height: "70vh",
     objectFit: "cover",
+    alignContent: "center",
+    justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+      height: "50vh",
+    },
   },
   prevSvgIcon: {
     position: "absolute",

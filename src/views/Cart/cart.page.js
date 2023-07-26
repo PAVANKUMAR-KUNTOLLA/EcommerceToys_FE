@@ -290,12 +290,16 @@ const CartPage = () => {
                 Orders will be processed in INR.
               </Typography>
               <Box marginBottom="1rem">
-                <Button
-                  variant="outlined"
-                  onClick={() => handleNav("checkout")}
-                >
-                  CHECKOUT
-                </Button>
+                {cart.length > 0 ? (
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleNav("checkout")}
+                  >
+                    CHECKOUT
+                  </Button>
+                ) : (
+                  <Button disabled>CHECKOUT</Button>
+                )}
               </Box>
               <Typography marginBottom="1rem">CONTINUE SHOPPING</Typography>
             </Box>

@@ -12,4 +12,5 @@ export default {
   products: "/api/v1/products/",
   edit_product: "/api/v1/edit_product/",
   relevant_products: "/api/v1/relevant_products/",
+  place_order: "api/v1/place_order/",
 };
