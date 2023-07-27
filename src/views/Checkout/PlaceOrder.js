@@ -84,9 +84,9 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
               display: "flex",
               flexDirection: "column",
               gap: "16px",
-              width: "100%",
-              maxWidth: "50%",
-              marginLeft: "30px",
+              width: { xs: "100%", sm: "60%" },
+              maxWidth: "100%",
+              marginLeft: "10px",
             }}
           >
             <Box>
@@ -117,7 +117,6 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
                 <Table sx={{ maxWidth: 450 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell align="left"></TableCell>
                       <TableCell align="left">Title</TableCell>
                       <TableCell align="left">Quantity</TableCell>
                       <TableCell align="left">Amount</TableCell>
@@ -131,9 +130,6 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
                       >
-                        <TableCell component="th" scope="row">
-                          {row.name}
-                        </TableCell>
                         <TableCell align="left">{row.title}</TableCell>
                         <TableCell align="left">{row.quantity}</TableCell>
                         <TableCell align="left">

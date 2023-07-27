@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Page from "../../components/Page";
 import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
@@ -144,6 +144,9 @@ const productViewCustomStyles = makeStyles((theme) => ({
     letterSpacing: "1.5px",
     [theme.breakpoints.down("sm")]: {
       marginTop: "0",
+      fontSize: "20px",
+      letterSpacing: "0.5px",
+      marginBottom: "0px",
     },
   },
 }));
@@ -155,6 +158,7 @@ const ProductViewPage = () => {
   const currProduct = products.find(
     (product) => product.id === parseInt(params.id)
   );
+  let currProductRef = useRef(params.id);
   const [relevantProducts, setRelevantProducts] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const isLoadingSpin = useSelector((state) => state.products.isLoadingSpin);
@@ -242,6 +246,13 @@ const ProductViewPage = () => {
     setIsCartLoadingSpin(true);
     handleEditProduct(data);
   };
+
+  useEffect(() => {
+    if (params.id !== currProductRef.current) {
+      handleFetchRelevantProducts();
+      setCurrentSlide(0);
+    }
+  }, [currProduct]);
 
   useEffect(() => {
     dispatch(setSearch(false));

@@ -27,6 +27,7 @@ export const footercardStyles = makeStyles((theme) => ({
       justifyContent: "space-between",
       marginLeft: "auto",
       marginRight: "auto",
+      marginTop: "-30px",
     },
   },
   ProfileBlock: {
@@ -34,6 +35,7 @@ export const footercardStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     marginLeft: "auto",
     marginRight: "auto",
+    [theme.breakpoints.down("sm")]: {},
   },
   Profile: {
     width: "100%",
@@ -44,10 +46,25 @@ export const footercardStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
       justifyContent: "space-between",
-      marginLeft: "5%",
-      marginRight: "5%",
       marginTop: "100px",
     },
+  },
+  title: {
+    textTransform: "uppercase",
+    color: "#3e4152",
+    fontSize: "28px",
+    fontWeight: "700",
+    marginTop: "34px",
+    marginBottom: "10px",
+    letterSpacing: "1.5px",
+    [theme.breakpoints.down("sm")]: {
+      marginTop: "0",
+    },
+  },
+  paragraph: {
+    fontSize: "16px",
+    fontWeight: "400",
+    lineHeight: "20px",
   },
   contact: {
     display: "flex",
@@ -105,8 +122,8 @@ const MyFooter = () => {
           />
         </Grid>
         <Grid maxWidth="md" className={customStyles.About}>
-          <Typography variant="h1">About Me</Typography>
-          <Typography maxWidth="80%">
+          <Typography className={customStyles.title}>about me</Typography>
+          <Typography maxWidth="100%" className={customStyles.paragraph}>
             I'm now pursuing my Bachelor of Technology at Madanapalle Institute
             of Technology and Science in Computer Science and Engineering-Cyber
             Security. I'm looking forward to an internship opportunity that will
@@ -162,9 +179,7 @@ const MyFooter = () => {
       </Container>
       <Container>
         <Box className={customStyles.contact}>
-          <Typography variant="h3" marginBottom={"10px"}>
-            Contact me
-          </Typography>
+          <Typography className={customStyles.title}>Contact me</Typography>
           <Typography variant="h3" marginBottom={"10px"}>
             Explore my profiles and stay up-to-date with my latest projects
           </Typography>

@@ -14,9 +14,33 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSpin from "../../components/LoadingSpin";
 import SearchResultsPage from "../../components/SearchResults";
+import { makeStyles } from "@mui/styles";
+
+export const customFavouriteStyles = makeStyles((theme) => ({
+  container: {
+    [theme.breakpoints.up("lg")]: {
+      maxWidth: theme.breakpoints.values.lg,
+    },
+    [theme.breakpoints.down("md")]: {
+      maxWidth: theme.breakpoints.values.sm,
+    },
+  },
+  title: {
+    textTransform: "uppercase",
+    color: "#3e4152",
+    fontSize: "28px",
+    fontWeight: "700",
+    marginTop: "34px",
+    marginBottom: "10px",
+    letterSpacing: "1.5px",
+    [theme.breakpoints.down("sm")]: {
+      marginTop: "20px",
+    },
+  },
+}));
 
 const FavouritePage = () => {
-  const customStyles = useStyles();
+  const customStyles = customFavouriteStyles();
   const favourites = useSelector((state) => state.products.favourites);
   const dispatch = useDispatch();
   const isLoadingSpin = useSelector((state) => state.products.isLoadingSpin);
@@ -50,9 +74,7 @@ const FavouritePage = () => {
     <Page title="Favourites">
       {!isLoadingSpin && !isSearchOn ? (
         <Container maxWidth="md" className={customStyles.container}>
-          <Typography variant="h1" alignItems="left" marginTop="50px">
-            Wishlist
-          </Typography>
+          <Typography className={customStyles.title}>Wishlist</Typography>
           <hr bordertop="2px solid black" fontWeight="bold"></hr>
           <Grid container spacing={2} mt={2}>
             {favourites &&

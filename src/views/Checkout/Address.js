@@ -20,7 +20,7 @@ const AddressStep = ({ addressData, setAddressData }) => {
           flexDirection: "column",
           gap: "16px",
           marginTop: "50px",
-          maxWidth: "50%",
+          maxWidth: { xs: "80%", sm: "50%" },
           justifyContent: "space-between",
           marginLeft: "auto",
           marginRight: "auto",

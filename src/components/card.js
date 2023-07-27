@@ -51,6 +51,8 @@ export const customCardStyles = makeStyles((theme) => ({
     height: "100%",
     width: "100%",
     objectFit: "cover",
+    borderRadius: "10px",
+    cursor: "pointer",
   },
   favouriteIcon: {
     position: "absolute",
@@ -126,23 +128,23 @@ const ProductCard = ({ product }) => {
 
   const handleProductView = (id, title) => {
     console.log(title);
-    navigate(`/app/products/${id}/${title.replace(/ /g, "-")}/`);
+    const regex = /[^a-zA-Z0-9-]/g;
+    navigate(
+      `/app/products/${id}/${title.replace(/ /g, "-").replace(regex, "")}`
+    );
   };
 
   return (
     <Grid item sx={{ padding: "0px 6px" }} className={customStyles.productCard}>
       <Box className={customStyles.productImageBox}>
-        <Button
-          key={product.title}
+        <Avatar
+          variant="square"
+          src={`https://${product.image_0}`}
+          alt={product.title}
+          className={customStyles.productImage}
           onClick={() => handleProductView(product.id, product.title)}
-        >
-          <Avatar
-            variant="square"
-            src={`https://${product.image_0}`}
-            alt={product.title}
-            className={customStyles.productImage}
-          />
-        </Button>
+        />
+
         <IconButton
           className={customStyles.favouriteIcon}
           onClick={handleFavouriteClick}

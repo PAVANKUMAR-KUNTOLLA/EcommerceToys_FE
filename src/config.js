@@ -7,7 +7,7 @@ const config = {
   textTransform: "uppercase",
   fontSize: 15,
   color: "#474747",
-  backgroundColor: "#ffffff", // white
+  backgroundColor: "#fff", // white
   borderColor: "#ede6df", //#e7ddd1 //ede6df //#efe6db
   // backgroundColor: "#ffecf4", // Violet #fdf0f5
   // borderColor: "#edd7e1",

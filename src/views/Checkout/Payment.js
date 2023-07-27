@@ -23,9 +23,6 @@ const customPaymentStyles = makeStyles((theme) => ({
   },
   RadioGroup: {
     flexDirection: "row",
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-    },
   },
 }));
 

@@ -13,6 +13,7 @@ import {
   useMediaQuery,
   Button,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +27,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import LoadingSpin from "../../components/LoadingSpin";
 import SearchResultsPage from "../../components/SearchResults";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { thousands_separators } from "../../utils";
 
 const customCartStyles = makeStyles((theme) => ({
   mainBlock: {
@@ -39,33 +42,17 @@ const customCartStyles = makeStyles((theme) => ({
       marginRight: "auto",
     },
   },
-  CartBlock: {
+  cartBlock: {
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
     position: "relative",
   },
-  CancelIcon: {
-    position: "absolute",
-    top: "0px",
-    right: "0px",
-    fontSize: "30px",
-    justifyContent: "center",
-    display: "flex",
-    alignItems: "center",
-    minWidth: "48px",
-    minHeight: "48px",
-    padding: "0",
-    border: "0",
-    [theme.breakpoints.down("md")]: {
-      fontSize: "26px",
-    },
-  },
-  ImageBlock: {
+  imageBlock: {
     width: "50%",
     height: "100%",
   },
-  ContentBlock: {
+  contentBlock: {
     height: "100%",
     display: "flex",
     flexDirection: "column",
@@ -73,21 +60,27 @@ const customCartStyles = makeStyles((theme) => ({
     padding: "0 1rem",
     marginTop: "2rem",
   },
-  Image: {
+  image: {
     width: "100%",
     height: "auto",
+    cursor: "pointer",
   },
-  Title: {
-    marginBottom: "1rem",
+  title: {
+    fontSize: "14px",
+    fontWeight: "540",
+    lineHeight: "27px",
+    marginBottom: "5px",
   },
-  Price: {
-    marginBottom: "1rem",
+  price: {
+    fontWeight: "700",
+    fontSize: "18px",
+    lineHeight: "24px",
+    marginBottom: "16px",
   },
-  Quantity: {
-    marginBottom: "1rem",
-  },
-  TotalPrice: {
-    fontWeight: "bold",
+  quantity: {
+    maxWidth: "150px",
+    maxHeight: "50px",
+    borderRadius: "10px",
   },
   rightBlock: {
     display: "flex",
@@ -202,8 +195,13 @@ const CartPage = () => {
             {cart && cart.length > 0 ? (
               cart.map((product, id) => (
                 <Box key={id} my={2} marginBottom="0px">
-                  <Grid container className={customStyles.CartBlock}>
-                    <Grid item xs={6} className={customStyles.ImageBlock}>
+                  <Grid container className={customStyles.cartBlock}>
+                    <Grid
+                      item
+                      xs={6}
+                      sm={4}
+                      className={customStyles.imageBlock}
+                    >
                       <Box
                         component="a"
                         key={product.id}
@@ -215,52 +213,61 @@ const CartPage = () => {
                           variant="square"
                           src={`https://${product.image_0}`}
                           alt={product.title}
-                          className={customStyles.Image}
+                          className={customStyles.image}
                         />
                       </Box>
                     </Grid>
-                    <Grid item xs={6} className={customStyles.ContentBlock}>
+                    <Grid
+                      item
+                      xs={6}
+                      sm={8}
+                      className={customStyles.contentBlock}
+                    >
                       <Grid
                         container
                         direction="column"
                         style={{ height: "100%" }}
                       >
                         <Grid item>
-                          <Typography className={customStyles.Title}>
-                            {product.title}
-                          </Typography>
-                          <Typography className={customStyles.Price}>
-                            Price: {formattedPrice(product.price)}
+                          <Box sx={{ display: "flex" }}>
+                            <Typography className={customStyles.title}>
+                              {product.title}
+                            </Typography>
+
+                            <IconButton
+                              sx={{
+                                position: "absolute",
+                                top: "25px",
+                                right: "0",
+                                paddingLeft: "24px",
+                                display: { xs: "none", sm: "block" },
+                              }}
+                            >
+                              <DeleteIcon
+                                sx={{ color: "#474747" }}
+                                onClick={() =>
+                                  handleAddToCartClick(
+                                    product.id,
+                                    product.title,
+                                    product.is_item_in_cart
+                                  )
+                                }
+                              />
+                            </IconButton>
+                          </Box>
+                          <Typography className={customStyles.price}>
+                            Rs. {thousands_separators(product.price)}
                           </Typography>
                           <TextField
-                            label="Quantity"
+                            variant="outlined"
                             type="number"
                             value={product.quantity}
-                            className={customStyles.Quantity}
+                            className={customStyles.quantity}
                             onChange={(e) =>
                               handleQuantityChange(
                                 product.id,
                                 product.title,
                                 e.target.value
-                              )
-                            }
-                          />
-                        </Grid>
-                        {!matchesSm && (
-                          <Grid item>
-                            <Typography className={customStyles.TotalPrice}>
-                              Total:{" "}
-                              {formattedPrice(product.price * product.quantity)}
-                            </Typography>
-                          </Grid>
-                        )}
-                        <Grid item className={customStyles.CancelIcon}>
-                          <CancelOutlinedIcon
-                            onClick={() =>
-                              handleAddToCartClick(
-                                product.id,
-                                product.title,
-                                product.is_item_in_cart
                               )
                             }
                           />
@@ -277,31 +284,66 @@ const CartPage = () => {
           </Container>
           <Container maxWidth="xs" className={customStyles.rightBlock}>
             <Box>
-              <Typography variant="h3" marginBottom="1rem">
-                Subtotal ₹
-                {cart
-                  .reduce((acc, item) => acc + item.quantity * item.price, 0)
-                  .toFixed(2)}
-              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "16px",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "24px",
+                    fontWeight: "600",
+                    lineHeight: "27px",
+                  }}
+                >
+                  Total
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "24px",
+                    fontWeight: "600",
+                    lineHeight: "27px",
+                  }}
+                >
+                  Rs.{" "}
+                  {thousands_separators(
+                    cart
+                      .reduce(
+                        (acc, item) => acc + item.quantity * item.price,
+                        0
+                      )
+                      .toFixed(2)
+                  )}
+                </Typography>
+              </Box>
               <Typography marginBottom="1rem">
                 Tax included and shipping calculated at checkout
               </Typography>
               <Typography marginBottom="1rem">
                 Orders will be processed in INR.
               </Typography>
-              <Box marginBottom="1rem">
+
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Button
+                  variant="contained"
+                  onClick={() => handleNav("products")}
+                >
+                  shop more
+                </Button>
+
                 {cart.length > 0 ? (
                   <Button
                     variant="outlined"
                     onClick={() => handleNav("checkout")}
                   >
-                    CHECKOUT
+                    proceed to checkout
                   </Button>
                 ) : (
                   <Button disabled>CHECKOUT</Button>
                 )}
               </Box>
-              <Typography marginBottom="1rem">CONTINUE SHOPPING</Typography>
             </Box>
           </Container>
         </Box>

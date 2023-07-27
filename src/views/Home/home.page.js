@@ -38,6 +38,8 @@ export const useStyles = makeStyles((theme) => ({
     letterSpacing: "1.5px",
     [theme.breakpoints.down("sm")]: {
       marginTop: "0",
+      fontSize: "20px",
+      letterSpacing: "0.5px",
     },
   },
 }));
@@ -126,7 +128,7 @@ const HomePage = () => {
           >
             <Grid item xs={12}>
               <Typography className={customStyles.title}>
-                you may like
+                you may also like
               </Typography>
             </Grid>
             <ProductSlider products={products} />

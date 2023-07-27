@@ -10,6 +10,7 @@ export const customSliderStyles = makeStyles((theme) => ({
     paddingRight: "0",
     [theme.breakpoints.up("lg")]: {
       maxWidth: theme.breakpoints.values.lg,
+      overflowX: "hidden",
     },
     [theme.breakpoints.down("md")]: {
       maxWidth: theme.breakpoints.values.md,

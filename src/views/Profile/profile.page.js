@@ -36,7 +36,7 @@ const customProfileStyles = makeStyles((theme) => ({
     marginTop: "50px",
     flexDirection: "column",
     width: "100%",
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       flexDirection: "row",
     },
   },
@@ -48,7 +48,7 @@ const customProfileStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     marginLeft: "auto",
     marginRight: "auto",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
       marginBottom: "10px",
     },
@@ -186,7 +186,7 @@ const ProfilePage = () => {
             </AccordionSummary>
             <AccordionDetails>
               <TableContainer component={Paper} sx={{ marginTop: "35px" }}>
-                <Table sx={{ maxWidth: 600 }} aria-label="simple table">
+                <Table sx={{ maxWidth: "sm" }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
                       <TableCell align="left">Title</TableCell>
@@ -229,7 +229,7 @@ const ProfilePage = () => {
               <TableContainer
                 component={Paper}
                 sx={{
-                  marginTop: "35px",
+                  marginTop: "20px",
                 }}
               >
                 <Table sx={{ maxWidth: "md" }} aria-label="simple table">
@@ -241,22 +241,20 @@ const ProfilePage = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {userInfo["visitHistory"]
-                      .slice(0, Math.min(userInfo["visitHistory"].length, 10))
-                      .map((row) => (
-                        <TableRow
-                          key={row.id}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.title}
-                          </TableCell>
-                          <TableCell align="left">{row.view_count}</TableCell>
-                          <TableCell align="left">{row.visited_at}</TableCell>
-                        </TableRow>
-                      ))}
+                    {userInfo["visitHistory"].map((row) => (
+                      <TableRow
+                        key={row.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.title}
+                        </TableCell>
+                        <TableCell align="left">{row.view_count}</TableCell>
+                        <TableCell align="left">{row.visited_at}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
