@@ -94,12 +94,12 @@ const PaymentStep = ({ paymentData, setPaymentData }) => {
               value={paymentData.cardNumber}
               onChange={handleChange}
               required
-              error={!isCardPaymentValid() && isPaymentMethodSelected()}
-              helperText={
-                !isCardPaymentValid() && isPaymentMethodSelected()
-                  ? "Please fill in all the card details."
-                  : ""
-              }
+              // error={!isCardPaymentValid() && isPaymentMethodSelected()}
+              // helperText={
+              //   !isCardPaymentValid() && isPaymentMethodSelected()
+              //     ? "Please fill in all the card details."
+              //     : ""
+              // }
             />
             <TextField
               id="cardHolder"
@@ -109,12 +109,12 @@ const PaymentStep = ({ paymentData, setPaymentData }) => {
               value={paymentData.cardHolder}
               onChange={handleChange}
               required
-              error={!isCardPaymentValid() && isPaymentMethodSelected()}
-              helperText={
-                !isCardPaymentValid() && isPaymentMethodSelected()
-                  ? "Please fill in all the card details."
-                  : ""
-              }
+              // error={!isCardPaymentValid() && isPaymentMethodSelected()}
+              // helperText={
+              //   !isCardPaymentValid() && isPaymentMethodSelected()
+              //     ? "Please fill in all the card details."
+              //     : ""
+              // }
             />
             <TextField
               id="expiryDate"
@@ -124,12 +124,12 @@ const PaymentStep = ({ paymentData, setPaymentData }) => {
               value={paymentData.expiryDate}
               onChange={handleChange}
               required
-              error={!isCardPaymentValid() && isPaymentMethodSelected()}
-              helperText={
-                !isCardPaymentValid() && isPaymentMethodSelected()
-                  ? "Please fill in all the card details."
-                  : ""
-              }
+              // error={!isCardPaymentValid() && isPaymentMethodSelected()}
+              // helperText={
+              //   !isCardPaymentValid() && isPaymentMethodSelected()
+              //     ? "Please fill in all the card details."
+              //     : ""
+              // }
             />
             <TextField
               id="cvv"
@@ -139,12 +139,12 @@ const PaymentStep = ({ paymentData, setPaymentData }) => {
               value={paymentData.cvv}
               onChange={handleChange}
               required
-              error={!isCardPaymentValid() && isPaymentMethodSelected()}
-              helperText={
-                !isCardPaymentValid() && isPaymentMethodSelected()
-                  ? "Please fill in all the card details."
-                  : ""
-              }
+              // error={!isCardPaymentValid() && isPaymentMethodSelected()}
+              // helperText={
+              //   !isCardPaymentValid() && isPaymentMethodSelected()
+              //     ? "Please fill in all the card details."
+              //     : ""
+              // }
             />
           </>
         )}
@@ -158,12 +158,12 @@ const PaymentStep = ({ paymentData, setPaymentData }) => {
             value={paymentData.upiId}
             onChange={handleChange}
             required
-            error={!isUpiPaymentValid() && isPaymentMethodSelected()}
-            helperText={
-              !isUpiPaymentValid() && isPaymentMethodSelected()
-                ? "Please fill in the UPI ID."
-                : ""
-            }
+            // error={!isUpiPaymentValid() && isPaymentMethodSelected()}
+            // helperText={
+            //   !isUpiPaymentValid() && isPaymentMethodSelected()
+            //     ? "Please fill in the UPI ID."
+            //     : ""
+            // }
           />
         )}
       </Box>

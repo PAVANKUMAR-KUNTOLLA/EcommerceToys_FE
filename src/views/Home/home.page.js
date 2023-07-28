@@ -16,7 +16,7 @@ import {
 } from "../../redux/products/produtsSlice";
 import LoadingSpin from "../../components/LoadingSpin";
 import MyFooter from "./Footer";
-import AdverstiesmentImagesSlider from "./advertisement";
+import AdverstiesmentImagesSlider from "./Advertisement";
 import SearchResultsPage from "../../components/SearchResults";
 
 export const useStyles = makeStyles((theme) => ({

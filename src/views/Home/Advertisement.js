@@ -37,6 +37,7 @@ const AdverstismentCustomStyles = makeStyles((theme) => ({
 }));
 const AdverstiesmentImagesSlider = () => {
   const images = [
+    "/static/img/one_piece.jpg",
     "/static/img/wallpaperflare.com_wallpaper.jpg",
     "/static/img/wallpaperflare.com_wallpaper (5).jpg",
     "/static/img/wallpaperflare.com_wallpaper (3).jpg",

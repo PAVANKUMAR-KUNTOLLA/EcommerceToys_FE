@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -15,8 +15,9 @@ import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
-import { privateApiPOST } from "../../components/PrivateRoute";
+import { privateApiPOST, privateApiGET } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
+import { setProducts, setLoadingSpin } from "../../redux/products/produtsSlice";
 
 const customPlaceOrderStyles = makeStyles((theme) => ({
   MainBlock: {
@@ -34,7 +35,10 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
 
   const customStyles = customPlaceOrderStyles();
   const cart = useSelector((state) => state.products.cart);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const isLoadingSpin = useSelector((state) => state.products.isLoadingSpin);
 
   const handleEditPlaceOrder = (data) => {
     let payload = data;
@@ -55,6 +59,23 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
     navigate(path);
   };
 
+  const handleFetchProducts = () => {
+    dispatch(setLoadingSpin(true));
+    privateApiGET(Api.products)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          console.log("data", data);
+          dispatch(setProducts(data?.data));
+          dispatch(setLoadingSpin(false));
+        }
+      })
+      .catch((error) => {
+        console.log("Error", error);
+        dispatch(setLoadingSpin(false));
+      });
+  };
+
   const handlePlaceOrder = () => {
     // Display the success alert
     const arrayOfArrayIds = cart.map((item) => {
@@ -73,6 +94,10 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
       handleNav("home");
     }, 3000);
   };
+
+  useEffect(() => {
+    handleFetchProducts();
+  }, []);
 
   return (
     <Box maxWidth="lg" className={customStyles.MainBlock}>

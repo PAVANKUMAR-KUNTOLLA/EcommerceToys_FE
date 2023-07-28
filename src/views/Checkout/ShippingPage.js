@@ -5,17 +5,15 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import LoginStep from "./LoginStep";
 import AddressStep from "./Address"; // Make sure you import the correct component
 import PlaceOrderStep from "./PlaceOrder";
 import PaymentStep from "./Payment"; // Make sure you import the correct component
 import { Visibility } from "@mui/icons-material";
 
-const steps = ["Login", "Address", "Payment", "Place Order"];
+const steps = ["Address", "Payment", "Place Order"];
 
 export default function OrderPayment() {
   const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set());
 
   const [addressData, setAddressData] = useState({
     address: "",
@@ -33,17 +31,9 @@ export default function OrderPayment() {
     upiId: "",
   });
 
-  const isStepOptional = (step) => {
-    return step === 0;
-  };
-
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
-
   const handleNext = () => {
     // Move to the next step if the current step is valid
-    if (activeStep === 1) {
+    if (activeStep === 0) {
       // AddressStep validation logic
       const addressFields = ["address", "city", "pincode", "country"];
       const isAddressStepValid = addressFields.every(
@@ -55,7 +45,7 @@ export default function OrderPayment() {
         alert("Please fill in all the required address fields.");
         return;
       }
-    } else if (activeStep === 2) {
+    } else if (activeStep === 1) {
       // PaymentStep validation logic
       if (paymentData.paymentMethod === "") {
         // If the PaymentStep is not valid, show a message
@@ -88,31 +78,10 @@ export default function OrderPayment() {
 
     // If the current step is valid, move to the next step
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-    setSkipped(newSkipped);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
   };
 
   const handleReset = () => {
@@ -136,22 +105,20 @@ export default function OrderPayment() {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <LoginStep />;
-      case 1:
         return (
           <AddressStep
             addressData={addressData}
             setAddressData={setAddressData}
           />
         );
-      case 2:
+      case 1:
         return (
           <PaymentStep
             paymentData={paymentData}
             setPaymentData={setPaymentData}
           />
         );
-      case 3:
+      case 2:
         return (
           <PlaceOrderStep
             address={addressData}
@@ -170,14 +137,7 @@ export default function OrderPayment() {
         {steps.map((label, index) => {
           const stepProps = {};
           const labelProps = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
-            );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
+
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
@@ -186,7 +146,9 @@ export default function OrderPayment() {
         })}
       </Stepper>
       {/* Render the component based on the active step */}
-      {renderStepContent(activeStep)}
+      <Box sx={{ height: activeStep === 2 ? "450px" : "350px" }}>
+        {renderStepContent(activeStep)}
+      </Box>
       <div>
         {activeStep === steps.length ? (
           <React.Fragment>
@@ -210,11 +172,6 @@ export default function OrderPayment() {
                 Back
               </Button>
               <Box sx={{ flex: "1 1 auto" }} />
-              {isStepOptional(activeStep) && (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                  Skip
-                </Button>
-              )}
 
               <Button onClick={handleNext}>
                 {activeStep === steps.length - 1 ? " " : "Next"}

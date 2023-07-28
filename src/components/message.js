@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export default function Message() {
   return (
     <Stack sx={{ width: "100%" }} spacing={2}>
-      <Alert severity="error">
+      <Alert severity="info">
         Your cart is empty. <Link to="/">Go Back</Link>
       </Alert>
       {/* <Alert severity="warning">This is a warning alert — check it out!</Alert> */}

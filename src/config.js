@@ -3,7 +3,7 @@ const config = {
   basename: "",
   defaultPath: "/app/home",
   defaultPathID: "home",
-  fontFamily: "Oswald sans-serif",
+  fontFamily: "Roboto",
   textTransform: "uppercase",
   fontSize: 15,
   color: "#474747",
