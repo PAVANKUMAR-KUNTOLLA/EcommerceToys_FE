@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -14,6 +15,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import { thousands_separators } from "../../utils";
 
 import { privateApiPOST, privateApiGET } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
@@ -27,6 +29,27 @@ const customPlaceOrderStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
     },
+  },
+  rightBlock: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    marginTop: "16px",
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "0px",
+      marginBottom: "auto",
+    },
+  },
+  title: {
+    fontSize: "16px",
+    fontWeight: "500",
+    lineHeight: "21px",
+    marginBottom: "5px",
+  },
+  paragraph: {
+    fontSize: "16px",
+    fontWeight: "400",
+    lineHeight: "19px",
   },
 }));
 
@@ -111,22 +134,26 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
               gap: "16px",
               width: { xs: "100%", sm: "60%" },
               maxWidth: "100%",
-              marginLeft: "10px",
+              marginLeft: { xs: "0", sm: "10px" },
             }}
           >
             <Box>
-              <Typography variant="h3">Shipping Address:</Typography>
+              <Typography className={customStyles.title}>
+                Shipping Address:
+              </Typography>
               {/* Display the address data */}
-              <Typography>
+              <Typography className={customStyles.paragraph}>
                 {address.address}, {address.city}, {address.pincode},{" "}
                 {address.country}
               </Typography>
               <hr></hr>
             </Box>
             <Box>
-              <Typography variant="h3">Payment Details:</Typography>
+              <Typography className={customStyles.title}>
+                Payment Details:
+              </Typography>
               {/* Display the payment details data */}
-              <Typography>
+              <Typography className={customStyles.paragraph}>
                 {paymentMethod === "card"
                   ? "Credit/Debit Card"
                   : paymentMethod === "upi"
@@ -136,15 +163,23 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
               <hr></hr>
             </Box>
             <Box>
-              <Typography variant="h3">Cart Items:</Typography>
+              <Typography className={customStyles.title}>
+                Cart Items:
+              </Typography>
               {/* Display the cart items data */}
-              <TableContainer component={Paper} sx={{ marginTop: "35px" }}>
-                <Table sx={{ maxWidth: 450 }} aria-label="simple table">
+              <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
+                <Table sx={{ maxWidth: 550 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell align="left">Title</TableCell>
-                      <TableCell align="left">Quantity</TableCell>
-                      <TableCell align="left">Amount</TableCell>
+                      <TableCell align="left" className={customStyles.title}>
+                        Title
+                      </TableCell>
+                      <TableCell align="left" className={customStyles.title}>
+                        Quantity
+                      </TableCell>
+                      <TableCell align="left" className={customStyles.title}>
+                        Amount
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -155,9 +190,22 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
                       >
-                        <TableCell align="left">{row.title}</TableCell>
-                        <TableCell align="left">{row.quantity}</TableCell>
-                        <TableCell align="left">
+                        <TableCell
+                          align="left"
+                          className={customStyles.paragraph}
+                        >
+                          {row.title}
+                        </TableCell>
+                        <TableCell
+                          align="left"
+                          className={customStyles.paragraph}
+                        >
+                          {row.quantity}
+                        </TableCell>
+                        <TableCell
+                          align="left"
+                          className={customStyles.paragraph}
+                        >
                           {row.quantity * row.price}
                         </TableCell>
                       </TableRow>
@@ -169,22 +217,76 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
               <hr></hr>
             </Box>
           </Box>
-          <Box sx={{ marginLeft: "20px" }}>
-            <Typography variant="h3" marginBottom="1rem">
-              Subtotal ₹
-              {cart
-                .reduce((acc, item) => acc + item.quantity * item.price, 0)
-                .toFixed(2)}
-            </Typography>
-            <Typography marginBottom="1rem">
-              Tax included and shipping calculated at checkout
-            </Typography>
-            <Typography marginBottom="1rem">
-              Orders will be processed in INR.
-            </Typography>
-            <Button variant="contained" onClick={handlePlaceOrder}>
-              Place Order
-            </Button>
+          <Box sx={{ marginLeft: { xs: "0", sm: "30px" } }}>
+            <Container
+              maxWidth="sm"
+              className={customStyles.rightBlock}
+              sx={{
+                borderRadius: "4px",
+                boxShadow: "0 1px 6px rgba(0,0,0, 0.095389)",
+                backgroundColor: "rgba(255,255,255, 1)",
+                borderTop: "1px solid #E5E5E5",
+                padding: "30px",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "16px",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "24px",
+                    fontWeight: "600",
+                    lineHeight: "27px",
+                  }}
+                >
+                  Total
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "21px",
+                    fontWeight: "500",
+                    lineHeight: "27px",
+                  }}
+                >
+                  Rs.{" "}
+                  {thousands_separators(
+                    cart
+                      .reduce(
+                        (acc, item) => acc + item.quantity * item.price,
+                        0
+                      )
+                      .toFixed(2)
+                  )}
+                </Typography>
+              </Box>
+              <Typography marginBottom="16px">
+                Tax included and shipping charges at checkout
+              </Typography>
+              <Typography marginBottom="16px">
+                Orders will be processed in INR.
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: { xs: "12px" },
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  onClick={() => handleNav("products")}
+                >
+                  shop more
+                </Button>
+                <Button variant="contained" onClick={handlePlaceOrder}>
+                  Place Order
+                </Button>
+              </Box>
+            </Container>
           </Box>
         </>
       )}

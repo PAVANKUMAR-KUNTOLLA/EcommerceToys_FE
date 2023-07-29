@@ -1,6 +1,7 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,29 +11,26 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Avatar from "@mui/material/Avatar";
+
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
-import { useNavigate } from "react-router-dom";
-
-import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import RestoreIcon from "@mui/icons-material/Restore";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import FolderIcon from "@mui/icons-material/Folder";
+import HomeIcon from "@mui/icons-material/Home";
+import ProductsIcon from "@mui/icons-material/ShoppingBag";
 
 import { useParams } from "react-router-dom";
 import { privateApiGET, privateApiPOST } from "./PrivateRoute";
@@ -46,6 +44,23 @@ import {
 } from "../redux/products/produtsSlice";
 
 const drawerWidth = 240;
+
+const customFooterStyles = makeStyles((theme) => ({
+  title: {
+    textTransform: "uppercase",
+    color: "#3e4152",
+    fontSize: "20px",
+    fontWeight: "500",
+    textAlign: "left",
+    marginTop: "10px",
+    letterSpacing: "1px",
+    paddingLeft: "10px",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "16px",
+      letterSpacing: "0.5px",
+    },
+  },
+}));
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -89,7 +104,10 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
+  justifyContent: "flex-start",
+  paddingLeft: "20px",
+  paddingTop: "20px",
+  paddingBottom: "20px",
 }));
 
 export default function PersistentDrawerLeft({ handleChange }) {
@@ -105,6 +123,23 @@ export default function PersistentDrawerLeft({ handleChange }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [userInfo, setUserInfo] = useState({
+    id: "",
+    name: "",
+    email: "",
+    orderHistory: [],
+    visitHistory: [],
+  });
+
+  const iconMap = {
+    Home: <HomeIcon />,
+    Products: <ProductsIcon />,
+    Favourites: <FavoriteIcon />,
+    Cart: <ShoppingCartIcon />,
+  };
+
+  const customStyles = customFooterStyles();
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -119,13 +154,8 @@ export default function PersistentDrawerLeft({ handleChange }) {
   };
 
   const handleLinkClick = (option) => {
-    navigate("/app/" + option.toLowerCase());
-  };
-
-  const [value, setValue] = React.useState("recents");
-
-  const handleNavigationClick = (event, newValue) => {
-    setValue(newValue);
+    navigate(`/app/${option.toLowerCase()}`);
+    handleDrawerClose();
   };
 
   const handleCancelClick = () => {
@@ -158,7 +188,6 @@ export default function PersistentDrawerLeft({ handleChange }) {
           if (status === 200) {
             console.log("data", data);
             dispatch(setProducts(data?.data));
-
             dispatch(setLoadingSpin(false));
           }
         })
@@ -190,16 +219,58 @@ export default function PersistentDrawerLeft({ handleChange }) {
   };
 
   const handleOutsideClick = (e) => {
+    // Get a reference to the drawer element
+    const drawer = document.getElementById("persistent-drawer");
+
+    // Check if the click occurred outside the drawer and outside the menu icon
     if (
       open &&
-      e.target.closest("#persistent-drawer") === null &&
+      drawer &&
+      !drawer.contains(e.target) &&
       !e.target.closest("#menu-icon")
     ) {
       setOpen(false);
     }
   };
 
+  const handleFetchProfileData = () => {
+    dispatch(setLoadingSpin(true));
+    privateApiGET(Api.profile)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          console.log("data", data);
+          let info = data?.data;
+          setUserInfo((prev) => ({
+            ...prev,
+            id: info.id,
+            name: info.name,
+            email: info.email,
+            orderHistory: info.orders,
+            visitHistory: info.products,
+          }));
+          dispatch(setLoadingSpin(false));
+        }
+      })
+      .catch((error) => {
+        console.log("Error", error);
+        dispatch(setLoadingSpin(false));
+      });
+  };
+
+  function stringAvatar(name) {
+    if (name.split(" ").length === 1) {
+      return {
+        children: `${name.split(" ")[0][0]}`,
+      };
+    }
+    return {
+      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+    };
+  }
+
   useEffect(() => {
+    handleFetchProfileData();
     document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
@@ -219,7 +290,7 @@ export default function PersistentDrawerLeft({ handleChange }) {
             edge="start"
             sx={{ mr: 2, ...(open && { display: "none" }) }}
           >
-            <MenuIcon />
+            <MenuIcon id="menu-icon" />
           </IconButton>
           {isSearchOpen ? (
             <Box sx={{ flexGrow: 1, width: "100%" }}>
@@ -307,41 +378,38 @@ export default function PersistentDrawerLeft({ handleChange }) {
         variant="persistent"
         anchor="left"
         open={open}
+        id="persistent-drawer"
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
+          <Box className={customStyles.account}>
+            {userInfo.name && (
+              <Avatar
+                {...stringAvatar(userInfo.name)}
+                sx={{
+                  width: "75px",
+                  height: "75px",
+                  fontSize: "24px",
+                  color: "white",
+                  backgroundColor: "rgb(0,76,153,0.8)",
+                }}
+                onClick={() => handleLinkClick("profile")}
+              />
             )}
-          </IconButton>
+            <Typography className={customStyles.title}>
+              {userInfo.name}
+            </Typography>
+          </Box>
         </DrawerHeader>
         <Divider />
         <List>
-          {["Home", "Products", "Favourites", "Cart"].map((text, index) => (
+          {["Home", "Products", "Favourites", "Cart"].map((text) => (
             <ListItem
               key={text}
               disablePadding
               onClick={() => handleLinkClick(text)}
             >
               <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["Statue", "T-shirt", "Action-Figures"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
+                <ListItemIcon>{iconMap[text]}</ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
@@ -351,24 +419,3 @@ export default function PersistentDrawerLeft({ handleChange }) {
     </Box>
   );
 }
-
-// import * as React from 'react';
-
-// export default function SimpleBottomNavigation() {
-
-//   return (
-//     <Box sx={{ width: 500 }}>
-//       <BottomNavigation
-//         showLabels
-//         value={value}
-//         onChange={(event, newValue) => {
-//           setValue(newValue);
-//         }}
-//       >
-//         <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-//         <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-//         <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
-//       </BottomNavigation>
-//     </Box>
-//   );
-// }

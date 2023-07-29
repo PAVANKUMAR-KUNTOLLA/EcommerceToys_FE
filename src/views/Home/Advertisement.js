@@ -25,6 +25,9 @@ const AdverstismentCustomStyles = makeStyles((theme) => ({
     transform: "translateY(-50%)",
     cursor: "pointer",
     zIndex: 1,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
   nextSvgIcon: {
     position: "absolute",
@@ -33,6 +36,9 @@ const AdverstismentCustomStyles = makeStyles((theme) => ({
     transform: "translateY(-50%)",
     cursor: "pointer",
     zIndex: 1,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
 }));
 const AdverstiesmentImagesSlider = () => {

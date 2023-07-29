@@ -7,7 +7,7 @@ const CheckOutPage = () => {
   return (
     <Page title="checkout">
       <Container maxWidth="md">
-        <OrderPayment />;
+        <OrderPayment />
       </Container>
     </Page>
   );

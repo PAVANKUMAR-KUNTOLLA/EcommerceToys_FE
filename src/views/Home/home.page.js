@@ -100,11 +100,12 @@ const HomePage = () => {
                   Favourites
                 </Typography>
               </Grid>
-              {favourites.map((product) => (
+              <ProductSlider products={favourites} />
+              {/* {favourites.map((product) => (
                 <Grid item key={product.id} xs={6} md={3} lg={3}>
                   <ProductCard product={product} />
                 </Grid>
-              ))}
+              ))} */}
             </Grid>
           )}
           <Grid container spacing={2} mt={2}>
@@ -139,7 +140,19 @@ const HomePage = () => {
       ) : isSearchOn ? (
         <SearchResultsPage customStyles={customStyles} />
       ) : null}
+
       {!isLoadingSpin && <MyFooter />}
+      <Box
+        sx={{
+          textAlign: "center",
+          marginRight: "auto",
+          marginLeft: "auto",
+          paddingTop: "24px",
+          paddingBottom: "24px",
+        }}
+      >
+        Copyright 2023 © @kuntollapavankumar
+      </Box>
     </Page>
   );
 };

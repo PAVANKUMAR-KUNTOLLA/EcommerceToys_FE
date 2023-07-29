@@ -90,41 +90,43 @@ const ProductSlider = ({ products, handlechange }) => {
 
   return (
     <Container maxWidth="lg" className={customStyles.container}>
-      <div className={customStyles.sliderControls}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={customStyles.prevSvgIcon}
-          width="68"
-          height="68"
-          viewBox="0 0 24 24"
-          strokeWidth="0.5"
-          stroke="#000000"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          onClick={handlePrev}
-        >
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path d="M15 6l-6 6l6 6" />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={customStyles.nextSvgIcon}
-          width="68"
-          height="68"
-          viewBox="0 0 24 24"
-          strokeWidth="0.5"
-          stroke="#000000"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          onClick={handleNext}
-        >
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path d="M9 6l6 6l-6 6" />
-        </svg>
-      </div>
-      <div
+      {products.length >= 4 && (
+        <Grid className={customStyles.sliderControls}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={customStyles.prevSvgIcon}
+            width="68"
+            height="68"
+            viewBox="0 0 24 24"
+            strokeWidth="0.5"
+            stroke="#000000"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            onClick={handlePrev}
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M15 6l-6 6l6 6" />
+          </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={customStyles.nextSvgIcon}
+            width="68"
+            height="68"
+            viewBox="0 0 24 24"
+            strokeWidth="0.5"
+            stroke="#000000"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            onClick={handleNext}
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M9 6l6 6l-6 6" />
+          </svg>
+        </Grid>
+      )}
+      <Grid
         className={customStyles.sliderWrapper}
         style={{
           transform: `translateX(-${currentPage * 100}%)`, // Use CSS transform to slide the content
@@ -132,7 +134,7 @@ const ProductSlider = ({ products, handlechange }) => {
       >
         {Array.from({ length: Math.ceil(products.length / cardsPerPage) }).map(
           (_, index) => (
-            <div
+            <Grid
               key={index}
               className={`${customStyles.sliderPage} ${
                 currentPage === index ? customStyles.sliderPageVisible : ""
@@ -147,10 +149,10 @@ const ProductSlider = ({ products, handlechange }) => {
                     </Grid>
                   ))}
               </Grid>
-            </div>
+            </Grid>
           )
         )}
-      </div>
+      </Grid>
     </Container>
   );
 };

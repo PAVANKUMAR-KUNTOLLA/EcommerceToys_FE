@@ -11,6 +11,6 @@ export default {
   notification: "/api/v1/notification/",
   products: "/api/v1/products/",
   edit_product: "/api/v1/edit_product/",
-  relevant_products: "/api/v1/relevant_products/",
+  record_visit: "/api/v1/record_visit_history/",
   place_order: "api/v1/place_order/",
 };

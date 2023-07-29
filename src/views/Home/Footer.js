@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { makeStyles } from "@mui/styles";
 import {
   Container,
@@ -16,38 +16,42 @@ import Tab from "@mui/material/Tab";
 import { Link } from "react-router-dom";
 
 export const footercardStyles = makeStyles((theme) => ({
-  MainBlock: {
+  mainBox: {
     display: "flex",
-    marginTop: "50px",
-    height: "auto",
-    backgroundColor: "",
     flexDirection: "row",
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-      justifyContent: "space-between",
-      marginLeft: "auto",
-      marginRight: "auto",
-      marginTop: "-30px",
-    },
-  },
-  ProfileBlock: {
-    height: "30vh",
-    justifyContent: "space-between",
+    marginTop: "100px",
+    marginBottom: "50px",
     marginLeft: "auto",
     marginRight: "auto",
-    [theme.breakpoints.down("sm")]: {},
-  },
-  Profile: {
-    width: "100%",
-    height: "40vh",
-  },
-  About: {
-    marginTop: "50px",
+
+    [theme.breakpoints.up("sm")]: {
+      borderRadius: "4px",
+      boxShadow: "0 1px 6px rgba(0,0,0, 0.095389)",
+      backgroundColor: "rgba(255,255,255, 1)",
+      borderTop: "1px solid #E5E5E5",
+    },
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
-      justifyContent: "space-between",
-      marginTop: "100px",
+      marginTop: "30px",
+      marginBottom: "30px",
     },
+  },
+  profileBlock: {
+    margin: "50px",
+    width: "40vw",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center",
+      marginLeft: "auto",
+      marginRight: "auto",
+      marginTop: "0",
+      marginBottom: "30px",
+    },
+  },
+  profile: {
+    width: "100%",
+    height: "40vh",
+    marginLeft: "auto",
+    [theme.breakpoints.down("sm")]: {},
   },
   title: {
     textTransform: "uppercase",
@@ -65,12 +69,32 @@ export const footercardStyles = makeStyles((theme) => ({
     fontSize: "16px",
     fontWeight: "400",
     lineHeight: "20px",
+    fontFamily: "Poppins",
+    fontStyle: "italic",
+    justifyContent: "center",
+    letterSpacing: "0.5px",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "14px",
+      lineHeight: "18px",
+    },
   },
   contact: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "space-between",
+    width: "80vw",
+    marginRight: "auto",
+    marginLeft: "auto",
+    paddingTop: "100px",
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: "10px",
+    },
+  },
+  subTitle: {
+    fontSize: "18px",
+    fontWeight: "500",
+    lineHeight: "21px",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "16px",
+      lineHeight: "19px",
+    },
   },
 }));
 
@@ -112,24 +136,87 @@ const MyFooter = () => {
   };
 
   return (
-    <>
-      <Container maxWidth="100%" className={customStyles.MainBlock}>
-        <Grid maxWidth="md" className={customStyles.ProfileBlock}>
-          <Avatar
-            variant="square"
-            src="/static/img/[removal.ai]_5a159d06-b0c9-41a2-b86d-7b606275dc50-passport_size_photo.png"
-            className={customStyles.Profile}
-          />
-        </Grid>
-        <Grid maxWidth="md" className={customStyles.About}>
-          <Typography className={customStyles.title}>about me</Typography>
-          <Typography maxWidth="100%" className={customStyles.paragraph}>
-            I'm now pursuing my Bachelor of Technology at Madanapalle Institute
-            of Technology and Science in Computer Science and Engineering-Cyber
-            Security. I'm looking forward to an internship opportunity that will
-            assist me in furthering my Data Science and Deep learning skills.
+    <Grid item maxWidth="md" className={customStyles.mainBox}>
+      <Grid item className={customStyles.profileBlock}>
+        <Avatar
+          variant="square"
+          src="/static/img/[removal.ai]_5a159d06-b0c9-41a2-b86d-7b606275dc50-passport_size_photo.png"
+          className={customStyles.profile}
+        />
+      </Grid>
+
+      <Grid item className={customStyles.contact}>
+        <Typography className={customStyles.paragraph}>
+          Hi, I'm{" "}
+          <Box
+            component="span"
+            sx={{
+              fontSize: "21px",
+              fontWeight: "600",
+            }}
+          >
+            kuntolla pavan kumar
+          </Box>
+          . I'm a B.Tech student with a deep passion for software engineering
+          and full stack development. I love creating innovative solutions and
+          building applications that make a positive impact. Constantly striving
+          to learn and grow in the tech world, I'm excited about the endless
+          possibilities that lie ahead in my journey as a software engineer.
+        </Typography>
+        <Box
+          sx={{
+            alignText: "center",
+            paddingTop: "24px",
+            paddingBottom: "16px",
+          }}
+        >
+          <Typography className={customStyles.subTitle}>
+            Explore my profiles and stay up-to-date with my latest projects
           </Typography>
-          <Box sx={{ width: "100%" }}>
+          {/* <Typography className={customStyles.subTitle}>
+            Follow me on LinkedIn, Facebook, LeetCode, HackerRank, GitHub,
+            Instagram and Twitter!
+          </Typography> */}
+        </Box>
+        <Box display={"flex"} sx={{ justifyContent: "center" }}>
+          <Link to="https://www.linkedin.com/in/pavan-kumar-kuntolla-454b84245/">
+            <Avatar
+              variant="square"
+              src="/static/img/linkedin-app-icon.svg"
+              sx={{ marginLeft: "20px", marginRight: "20px" }}
+            />
+          </Link>
+          <Link to="https://discordapp.com/users/1123274161184309368">
+            <Avatar
+              variant="square"
+              src="/static/img/discord-square-color-icon.svg"
+              sx={{ marginLeft: "20px", marginRight: "20px" }}
+            />
+          </Link>
+          <Link to="https://github.com/PAVANKUMAR-KUNTOLLA?tab=overview&from=2023-05-01&to=2023-05-01">
+            <Avatar
+              variant="square"
+              src="/static/img/github-icon.svg"
+              sx={{ marginLeft: "20px", marginRight: "20px" }}
+            />
+          </Link>
+          <Link to="https://leetcode.com/kuntollapavankumar/">
+            <Avatar
+              variant="square"
+              src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png"
+              sx={{ marginLeft: "20px", marginRight: "20px" }}
+            />
+          </Link>
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};
+
+export default MyFooter;
+
+{
+  /* <Box sx={{ width: "100%" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
                 value={value}
@@ -174,55 +261,5 @@ const MyFooter = () => {
             <CustomTabPanel value={value} index={2}>
               Projects
             </CustomTabPanel>
-          </Box>
-        </Grid>
-      </Container>
-      <Container>
-        <Box className={customStyles.contact}>
-          <Typography className={customStyles.title}>Contact me</Typography>
-          <Typography variant="h3" marginBottom={"10px"}>
-            Explore my profiles and stay up-to-date with my latest projects
-          </Typography>
-          <Typography marginBottom={"10px"}>
-            Follow me on LinkedIn, Facebook, LeetCode, HackerRank, GitHub,
-            Instagram and Twitter!
-          </Typography>
-          <Grid display={"flex"}>
-            <Link to="https://www.linkedin.com/in/pavan-kumar-kuntolla-454b84245/">
-              <Avatar
-                variant="square"
-                src="/static/img/linkedin-app-icon.svg"
-                sx={{ marginLeft: "20px", marginRight: "20px" }}
-              />
-            </Link>
-            <Link to="https://discordapp.com/users/1123274161184309368">
-              <Avatar
-                variant="square"
-                src="/static/img/discord-square-color-icon.svg"
-                sx={{ marginLeft: "20px", marginRight: "20px" }}
-              />
-            </Link>
-            <Link to="https://github.com/PAVANKUMAR-KUNTOLLA?tab=overview&from=2023-05-01&to=2023-05-01">
-              <Avatar
-                variant="square"
-                src="/static/img/github-icon.svg"
-                sx={{ marginLeft: "20px", marginRight: "20px" }}
-              />
-            </Link>
-            <Link to="https://leetcode.com/kuntollapavankumar/">
-              <Avatar
-                variant="square"
-                src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png"
-                sx={{ marginLeft: "20px", marginRight: "20px" }}
-              />
-            </Link>
-          </Grid>
-          <hr></hr>
-          Copyright 2023 © @kuntollapavankumar
-        </Box>
-      </Container>
-    </>
-  );
-};
-
-export default MyFooter;
+          </Box> */
+}

@@ -159,7 +159,14 @@ const ProductViewPage = () => {
     (product) => product.id === parseInt(params.id)
   );
   let currProductRef = useRef(params.id);
-  const [relevantProducts, setRelevantProducts] = useState([]);
+  const relevantProducts = currProduct
+    ? products.filter(
+        (product) =>
+          (product.title.startsWith(currProduct["title"]) ||
+            product.category === currProduct["category"]) &&
+          product.id != params.id
+      )
+    : [];
   const [currentSlide, setCurrentSlide] = useState(0);
   const isLoadingSpin = useSelector((state) => state.products.isLoadingSpin);
   const searchQuery = useSelector((state) => state.products.searchQuery);
@@ -181,7 +188,7 @@ const ProductViewPage = () => {
           console.log("data", data);
           dispatch(setProducts(data?.data));
           if (params.id) {
-            handleFetchRelevantProducts();
+            handleRecordVisitHistory();
           }
           dispatch(setLoadingSpin(false));
         }
@@ -192,15 +199,12 @@ const ProductViewPage = () => {
       });
   };
 
-  const handleFetchRelevantProducts = () => {
+  const handleRecordVisitHistory = () => {
     let payload = { id: params.id };
-    privateApiPOST(Api.relevant_products, payload)
+    privateApiPOST(Api.record_visit, payload)
       .then((response) => {
         const { status, data } = response;
-        if (status === 200) {
-          console.log("data", data);
-          setRelevantProducts(data?.data);
-        }
+        console.log("data", data?.message);
       })
       .catch((error) => {
         console.log("Error", error);
@@ -249,7 +253,7 @@ const ProductViewPage = () => {
 
   useEffect(() => {
     if (params.id !== currProductRef.current) {
-      handleFetchRelevantProducts();
+      handleRecordVisitHistory();
       setCurrentSlide(0);
     }
   }, [currProduct]);
@@ -259,7 +263,7 @@ const ProductViewPage = () => {
     if (products.length === 0) {
       handleFetchProducts();
     } else {
-      handleFetchRelevantProducts();
+      handleRecordVisitHistory();
     }
   }, []);
 
