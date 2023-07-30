@@ -44,12 +44,11 @@ const AdverstismentCustomStyles = makeStyles((theme) => ({
 const AdverstiesmentImagesSlider = () => {
   const images = [
     "/static/img/one_piece.jpg",
-    "/static/img/wallpaperflare.com_wallpaper.jpg",
-    "/static/img/wallpaperflare.com_wallpaper (5).jpg",
-    "/static/img/wallpaperflare.com_wallpaper (3).jpg",
-    "/static/img/wallpaperflare.com_wallpaper (2).jpg",
-    "/static/img/wallpaperflare.com_wallpaper (1).jpg",
-    "/static/img/wallpaperflare.com_wallpaper (4).jpg",
+    "/static/img/Spiderman.jpg",
+    "/static/img/My_Hero.jpg",
+    "/static/img/Avengers.jpg",
+    "/static/img/Batman.jpg",
+    "/static/img/Captain_america.jpg",
   ];
   const customStyles = AdverstismentCustomStyles();
 
@@ -66,7 +65,7 @@ const AdverstiesmentImagesSlider = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1 + 6) % 6);
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, []);

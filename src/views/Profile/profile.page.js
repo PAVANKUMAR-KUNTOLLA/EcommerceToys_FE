@@ -72,7 +72,6 @@ const customProfileStyles = makeStyles((theme) => ({
 }));
 
 const ProfilePage = () => {
-  const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
   const customStyles = customProfileStyles();
@@ -84,14 +83,6 @@ const ProfilePage = () => {
     orderHistory: [],
     visitHistory: [],
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setAddress((prevAddress) => ({
-      ...prevAddress,
-      [name]: value,
-    }));
-  };
 
   const handleProductView = (id, title) => {
     console.log(title);
@@ -122,10 +113,6 @@ const ProfilePage = () => {
       .catch((error) => {
         console.log("Error", error);
       });
-  };
-
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
   };
 
   function stringAvatar(name) {
@@ -172,8 +159,8 @@ const ProfilePage = () => {
           </Typography>
 
           <TableContainer component={Paper} sx={{ marginTop: "35px" }}>
-            <Table sx={{ maxWidth: "sm" }} aria-label="simple table">
-              <PerfectScrollbar style={{ maxHeight: "350px" }}>
+            <PerfectScrollbar style={{ maxHeight: "350px" }}>
+              <Table sx={{ maxWidth: "sm" }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">Title</TableCell>
@@ -199,8 +186,8 @@ const ProfilePage = () => {
                     </TableRow>
                   ))}
                 </TableBody>
-              </PerfectScrollbar>
-            </Table>
+              </Table>
+            </PerfectScrollbar>
           </TableContainer>
         </Box>
 
@@ -215,8 +202,8 @@ const ProfilePage = () => {
               marginTop: "20px",
             }}
           >
-            <Table sx={{ maxWidth: "md" }} aria-label="simple table">
-              <PerfectScrollbar style={{ maxHeight: "350px" }}>
+            <PerfectScrollbar style={{ maxHeight: "350px" }}>
+              <Table sx={{ maxWidth: "md" }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">Title</TableCell>
@@ -242,8 +229,8 @@ const ProfilePage = () => {
                     </TableRow>
                   ))}
                 </TableBody>
-              </PerfectScrollbar>
-            </Table>
+              </Table>
+            </PerfectScrollbar>
           </TableContainer>
         </Box>
       </Container>

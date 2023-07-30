@@ -126,6 +126,8 @@ const customCartStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       marginTop: "50px",
       marginBottom: "auto",
+      marginLeft: "16px",
+      marginRight: "16px",
     },
   },
 }));
@@ -234,9 +236,8 @@ const CartPage = () => {
 
   useEffect(() => {
     dispatch(setSearch(false));
-    if (cart.length === 0) {
-      handleFetchProducts();
-    }
+
+    handleFetchProducts();
   }, []);
 
   return (

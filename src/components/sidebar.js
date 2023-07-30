@@ -60,6 +60,15 @@ const customFooterStyles = makeStyles((theme) => ({
       letterSpacing: "0.5px",
     },
   },
+  logo: {
+    height: "60px",
+    width: "250px",
+    [theme.breakpoints.down("sm")]: {
+      height: "40px",
+      width: "160px",
+      marginLeft: "-20px",
+    },
+  },
 }));
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -281,7 +290,12 @@ export default function PersistentDrawerLeft({ handleChange }) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} isfullwidth={isfullwidth}>
+      <AppBar
+        position="fixed"
+        open={open}
+        isfullwidth={isfullwidth}
+        sx={{ backgroundColor: "dodgerblue" }}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -327,9 +341,11 @@ export default function PersistentDrawerLeft({ handleChange }) {
             </Box>
           ) : (
             <>
-              <Typography variant="h3" noWrap component="div">
-                Logo
-              </Typography>
+              <Avatar
+                className={customStyles.logo}
+                variant="square"
+                src="/static/img/super-heros-logo.png"
+              />
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <IconButton

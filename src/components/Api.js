@@ -12,5 +12,5 @@ export default {
   products: "/api/v1/products/",
   edit_product: "/api/v1/edit_product/",
   record_visit: "/api/v1/record_visit_history/",
-  place_order: "api/v1/place_order/",
+  place_order: "/api/v1/place_order/",
 };

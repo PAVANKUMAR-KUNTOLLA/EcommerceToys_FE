@@ -65,9 +65,8 @@ const FavouritePage = () => {
 
   useEffect(() => {
     dispatch(setSearch(false));
-    if (favourites.length === 0) {
-      handleFetchProducts();
-    }
+
+    handleFetchProducts();
   }, []);
 
   return (

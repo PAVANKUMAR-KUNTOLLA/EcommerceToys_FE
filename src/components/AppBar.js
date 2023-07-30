@@ -30,6 +30,8 @@ import {
   setSearchQuery,
   setLoadingSpin,
 } from "../redux/products/produtsSlice";
+import { Avatar } from "@mui/material";
+import { customCardStyles } from "./categoryCard";
 
 const pages = ["products", "cart", "favourites"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -69,13 +71,13 @@ const useStyles = makeStyles((theme) => ({
 const ResponsiveAppBar = () => {
   const [newSearchQuery, setNewSearchQuery] = useState("");
   const searchQuery = useSelector((state) => state.products.searchQuery);
-  const globalClasses = globalUseStyles();
+  const customStyles = globalUseStyles();
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const params = useParams();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSearchOn = useSelector((state) => state.products.isSearchOn);
   const isLoadingSpin = useSelector((state) => state.products.isSearchLoading);
 
@@ -147,6 +149,13 @@ const ResponsiveAppBar = () => {
     <AppBar position="static" sx={{ backgroundColor: "dodgerblue" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <Avatar
+            src="/static/img/super-heros-logo.png"
+            sx={{
+              height: "60px",
+              width: "250px",
+            }}
+          />
           {isMobile && <PersistentDrawerLeft />}
           {!isMobile && (
             <>
@@ -160,7 +169,7 @@ const ResponsiveAppBar = () => {
                 }}
               >
                 <TextField
-                  className={globalClasses.globalSearch}
+                  className={customStyles.globalSearch}
                   name="globalSearch"
                   value={newSearchQuery}
                   placeholder="Search here"
@@ -173,7 +182,7 @@ const ResponsiveAppBar = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <SearchIcon className={globalClasses.searchIcon} />
+                        <SearchIcon className={customStyles.searchIcon} />
                       </InputAdornment>
                     ),
                     endAdornment: (
