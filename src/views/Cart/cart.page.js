@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
-import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import { Link } from "react-router-dom";
 import Message from "../../components/message";
 import {
   Box,
@@ -12,21 +10,14 @@ import {
   TextField,
   useMediaQuery,
   Button,
-  CircularProgress,
   IconButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { privateApiGET, privateApiPOST } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
-import {
-  setProducts,
-  setLoadingSpin,
-  setSearch,
-} from "../../redux/products/produtsSlice";
+import { setProducts, setLoadingSpin } from "../../redux/products/produtsSlice";
 import { useNavigate } from "react-router-dom";
-import LoadingSpin from "../../components/LoadingSpin";
-import SearchResultsPage from "../../components/SearchResults";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -88,6 +79,9 @@ const customCartStyles = makeStyles((theme) => ({
         borderRadius: "0",
       },
     },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      border: "0.1px solid #bdbdbd",
+    },
     [theme.breakpoints.down("sm")]: {
       height: "40px",
       width: "90px",
@@ -136,9 +130,6 @@ const CartPage = () => {
   const cart = useSelector((state) => state.products.cart);
   const matchesSm = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLoadingSpin = useSelector((state) => state.products.isLoadingSpin);
-  const isSearchOn = useSelector((state) => state.products.isSearchOn);
-
-  const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
   const [isconfirmDialogOpen, setIsconfirmDialogOpen] = useState(false);
   const [editProductId, setEditProductId] = useState(null);
   const [orderType, setOrderType] = useState("placeOrder");
@@ -146,13 +137,6 @@ const CartPage = () => {
   const customStyles = customCartStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const formattedPrice = (price) => {
-    return price.toLocaleString("en-IN", {
-      style: "currency",
-      currency: "INR",
-    });
-  };
 
   const handleFetchProducts = () => {
     dispatch(setLoadingSpin(true));
@@ -172,6 +156,7 @@ const CartPage = () => {
   };
 
   const handleEditProduct = (data) => {
+    dispatch(setLoadingSpin(true));
     let payload = data;
     privateApiPOST(Api.edit_product, payload)
       .then((response) => {
@@ -180,6 +165,7 @@ const CartPage = () => {
           console.log("data", data);
           dispatch(setProducts(data?.data));
           setIsconfirmDialogOpen(false);
+          dispatch(setLoadingSpin(false));
           setEditProductId("");
           setOrderType("placeOrder");
         }
@@ -189,6 +175,7 @@ const CartPage = () => {
         setIsconfirmDialogOpen(false);
         setEditProductId("");
         setOrderType("placeOrder");
+        dispatch(setLoadingSpin(false));
       });
   };
 
@@ -198,10 +185,13 @@ const CartPage = () => {
   };
 
   const handleQuantityChange = (id, title, quantity) => {
-    if (quantity >= 1 && quantity <= 20) {
-      const data = { id: id, title: title, quantity: Math.floor(quantity) };
-      handleEditProduct(data);
+    let data = {};
+    if (quantity >= 1 && quantity <= 100) {
+      data = { id: id, title: title, quantity: Math.floor(quantity) };
+    } else {
+      data = { id: id, title: title, quantity: 0 };
     }
+    handleEditProduct(data);
   };
 
   const handleDeleteChange = (id) => {
@@ -234,195 +224,180 @@ const CartPage = () => {
     navigate(`/app/products/${id}/${title}`);
   };
 
-  useEffect(() => {
-    dispatch(setSearch(false));
-
-    handleFetchProducts();
-  }, []);
-
   return (
     <Page title="Cart">
-      {!isLoadingSpin && !isSearchOn ? (
-        <Box className={customStyles.mainBlock} maxWidth={"lg"}>
-          <Container maxWidth="sm">
-            {cart && cart.length > 0 ? (
-              cart.map((product, id) => (
-                <Grid
-                  container
-                  key={id}
-                  className={customStyles.cartBlock}
-                  sx={{
-                    borderRadius: "4px",
-                    boxShadow: "0 1px 6px rgba(0,0,0, 0.095389)",
-                    backgroundColor: "rgba(255,255,255, 1)",
-                    borderTop: "1px solid #E5E5E5",
-                    marginTop: "10px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <Grid item xs={4} className={customStyles.imageBlock}>
-                    <Avatar
-                      variant="square"
-                      src={`https://${product.image_0}`}
-                      alt={product.title}
-                      className={customStyles.image}
-                      key={product.id}
-                      onClick={() =>
-                        handleProductView(product.id, product.title)
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={7} className={customStyles.contentBlock}>
-                    <Typography className={customStyles.title}>
-                      {product.title}
-                    </Typography>
+      <Box className={customStyles.mainBlock} maxWidth={"lg"}>
+        <Container maxWidth="sm">
+          {cart && cart.length > 0 ? (
+            cart.map((product, id) => (
+              <Grid
+                container
+                key={id}
+                className={customStyles.cartBlock}
+                sx={{
+                  borderRadius: "4px",
+                  boxShadow: "0 1px 6px rgba(0,0,0, 0.095389)",
+                  backgroundColor: "rgba(255,255,255, 1)",
+                  borderTop: "1px solid #E5E5E5",
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                }}
+              >
+                <Grid item xs={4} className={customStyles.imageBlock}>
+                  <Avatar
+                    variant="square"
+                    src={`https://${product.image_0}`}
+                    alt={product.title}
+                    className={customStyles.image}
+                    key={product.id}
+                    onClick={() => handleProductView(product.id, product.title)}
+                  />
+                </Grid>
+                <Grid item xs={7} className={customStyles.contentBlock}>
+                  <Typography className={customStyles.title}>
+                    {product.title}
+                  </Typography>
 
-                    <Typography className={customStyles.price}>
-                      Rs. {thousands_separators(product.price)}
-                    </Typography>
-                    <Box className={customStyles.favQuantity}>
-                      <Box
-                        sx={{
-                          border: "0.1px solid #bdbdbd",
-                          marginRight: "10px",
-                        }}
-                      >
-                        <IconButton
-                          className={customStyles.favIcon}
-                          onClick={() =>
-                            handleFavouriteClick(
-                              product.id,
-                              product.title,
-                              product.is_favourite
-                            )
-                          }
-                        >
-                          {product.is_favourite ? (
-                            <FavoriteIcon
-                              sx={{
-                                color: "red",
-                                fontSize: "35px",
-                                padding: "1px",
-                              }}
-                            />
-                          ) : (
-                            <FavoriteBorderIcon
-                              sx={{
-                                fontSize: "35px",
-                                padding: "1px",
-                              }}
-                            />
-                          )}
-                        </IconButton>
-                      </Box>
-                      <TextField
-                        type="number"
-                        color="secondary"
-                        value={product.quantity}
-                        pattern="[0-9]"
-                        className={customStyles.quantity}
-                        onChange={(e) =>
-                          handleQuantityChange(
+                  <Typography className={customStyles.price}>
+                    Rs. {thousands_separators(product.price)}
+                  </Typography>
+                  <Box className={customStyles.favQuantity}>
+                    <Box
+                      sx={{
+                        border: "0.1px solid #bdbdbd",
+                        marginRight: "10px",
+                      }}
+                    >
+                      <IconButton
+                        className={customStyles.favIcon}
+                        onClick={() =>
+                          handleFavouriteClick(
                             product.id,
                             product.title,
-                            e.target.value
+                            product.is_favourite
                           )
                         }
-                      />
+                      >
+                        {product.is_favourite ? (
+                          <FavoriteIcon
+                            sx={{
+                              color: "red",
+                              fontSize: "35px",
+                              padding: "1px",
+                            }}
+                          />
+                        ) : (
+                          <FavoriteBorderIcon
+                            sx={{
+                              fontSize: "35px",
+                              padding: "1px",
+                            }}
+                          />
+                        )}
+                      </IconButton>
                     </Box>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <IconButton
-                      sx={{ position: "absolute", right: "0", top: "35px" }}
-                      onClick={() => handleDeleteChange(product.id)}
-                    >
-                      <DeleteIcon sx={{ color: "#474747" }} />
-                    </IconButton>
-                  </Grid>
+                    <TextField
+                      type="number"
+                      color="secondary"
+                      value={product.quantity > 0 ? product.quantity : ""}
+                      pattern="[0-9]"
+                      className={customStyles.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(
+                          product.id,
+                          product.title,
+                          e.target.value
+                        )
+                      }
+                    />
+                  </Box>
                 </Grid>
-              ))
-            ) : (
-              <Message>No items in cart.</Message>
-            )}
-          </Container>
-          <Container
-            maxWidth="sm"
-            className={customStyles.rightBlock}
+                <Grid item xs={1}>
+                  <IconButton
+                    sx={{ position: "absolute", right: "0", top: "35px" }}
+                    onClick={() => handleDeleteChange(product.id)}
+                  >
+                    <DeleteIcon sx={{ color: "#474747" }} />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ))
+          ) : (
+            <Message>No items in cart.</Message>
+          )}
+        </Container>
+        <Container
+          maxWidth="sm"
+          className={customStyles.rightBlock}
+          sx={{
+            borderRadius: "4px",
+            boxShadow: "0 1px 6px rgba(0,0,0, 0.095389)",
+            backgroundColor: "rgba(255,255,255, 1)",
+            borderTop: "1px solid #E5E5E5",
+            padding: "30px",
+          }}
+        >
+          <Box
             sx={{
-              borderRadius: "4px",
-              boxShadow: "0 1px 6px rgba(0,0,0, 0.095389)",
-              backgroundColor: "rgba(255,255,255, 1)",
-              borderTop: "1px solid #E5E5E5",
-              padding: "30px",
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "16px",
             }}
           >
-            <Box
+            <Typography
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "16px",
+                fontSize: "24px",
+                fontWeight: "600",
+                lineHeight: "27px",
               }}
             >
-              <Typography
-                sx={{
-                  fontSize: "24px",
-                  fontWeight: "600",
-                  lineHeight: "27px",
-                }}
-              >
-                Total
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "21px",
-                  fontWeight: "500",
-                  lineHeight: "27px",
-                }}
-              >
-                Rs.{" "}
-                {thousands_separators(
-                  cart
-                    .reduce((acc, item) => acc + item.quantity * item.price, 0)
-                    .toFixed(2)
-                )}
-              </Typography>
-            </Box>
-            <Typography marginBottom="16px">
-              Tax included and shipping calculated at checkout
+              Total
             </Typography>
-            <Typography marginBottom="16px">
-              Orders will be processed in INR.
-            </Typography>
-
-            <Box
+            <Typography
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: { xs: "12px" },
+                fontSize: "21px",
+                fontWeight: "500",
+                lineHeight: "27px",
               }}
             >
-              <Button variant="outlined" onClick={() => handleNav("products")}>
-                shop more
-              </Button>
-
-              {cart.length > 0 ? (
-                <Button
-                  variant="contained"
-                  onClick={() => handleNav("checkout")}
-                >
-                  proceed to checkout
-                </Button>
-              ) : (
-                <Button disabled>CHECKOUT</Button>
+              Rs.{" "}
+              {thousands_separators(
+                cart
+                  .reduce((acc, item) => acc + item.quantity * item.price, 0)
+                  .toFixed(2)
               )}
-            </Box>
-          </Container>
-        </Box>
-      ) : isLoadingSpin ? (
-        <LoadingSpin isBackdrop={true} />
-      ) : isSearchOn && !isLoadingSpin ? (
-        <SearchResultsPage />
-      ) : null}
+            </Typography>
+          </Box>
+          <Typography marginBottom="16px">
+            Tax included and shipping calculated at checkout
+          </Typography>
+          <Typography marginBottom="16px">
+            Orders will be processed in INR.
+          </Typography>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: { xs: "12px" },
+            }}
+          >
+            <Button variant="outlined" onClick={() => handleNav("products")}>
+              shop more
+            </Button>
+
+            {cart
+              .reduce((acc, item) => acc + item.quantity * item.price, 0)
+              .toFixed(2) > 0 ? (
+              <Button variant="contained" onClick={() => handleNav("checkout")}>
+                proceed to checkout
+              </Button>
+            ) : (
+              <Button disabled>CHECKOUT</Button>
+            )}
+          </Box>
+        </Container>
+      </Box>
 
       <ConfirmationDialogBox
         open={isconfirmDialogOpen}

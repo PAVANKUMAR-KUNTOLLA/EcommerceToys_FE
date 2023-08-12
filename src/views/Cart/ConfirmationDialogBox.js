@@ -98,7 +98,6 @@ const ConfirmationDialogBox = ({
   open,
   handleClose,
   handleConfirm,
-  quantity,
   isLoadingSpin,
   productId,
 }) => {
@@ -132,86 +131,6 @@ const ConfirmationDialogBox = ({
                 Confirm Investment in SGB Scheme 2021-22 Series IV
               </Typography>
             </Box>
-            {/* <Box className={customTextClasses.quantityRow}>
-              <Box>
-                <Typography className={customTextClasses.boldText}>
-                  {quantity}
-                </Typography>
-                <Typography className={customTextClasses.normalText}>
-                  Quantity
-                </Typography>
-              </Box>
-
-              <Box>
-                <Typography className={customTextClasses.boldText}>
-                  Rs. {thousands_separators(quantity * state["unitPrice"])}.00
-                </Typography>
-                <Typography className={customTextClasses.normalText}>
-                  Amount
-                </Typography>
-              </Box>
-            </Box>
-            {isPlaceOrderFailed !== true ? (
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Button
-                  disabled={isLoadingSpin}
-                  variant="contained"
-                  color="secondary"
-                  className={customTextClasses.confirmButton}
-                  onClick={handleConfirm}
-                >
-                  Confirm{"  "}
-                  {isLoadingSpin && (
-                    <CircularProgress
-                      size={15}
-                      color="primary"
-                      sx={{ marginLeft: "15px" }}
-                    />
-                  )}
-                </Button>
-              </Box>
-            ) : (
-              <Box
-                sx={{
-                  textAlign: "center",
-                }}
-              >
-                <Alert
-                  severity="error"
-                  sx={{
-                    maxWidth: "400px",
-                    justifyContent: "center",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                >
-                  <AlertTitle className={customTextClasses.normalText}>
-                    {errorMessage.split("... ")[0]}
-                  </AlertTitle>
-                </Alert>
-
-                <Button
-                  disabled={isLoadingSpin}
-                  variant="contained"
-                  color="secondary"
-                  className={customTextClasses.confirmButton}
-                  // onClick={handleConfirm}
-                  sx={{
-                    marginTop: "24px",
-                  }}
-                >
-                  {errorMessage.split("... ")[1]}
-                </Button>
-              </Box>
-            )}
-            <Box sx={{ margin: "43px auto 13px", textAlign: "center" }}>
-              <Typography className={customTextClasses.normalText}>
-                Ensure sufficient balance in your equity account
-              </Typography>
-              <Typography className={customTextClasses.normalText}>
-                Bonds will be allotted by the exchange into your demat account
-              </Typography>
-            </Box> */}
           </Box>
         ) : (
           <Box sx={{ textAlign: "center", padding: "20px" }}>
@@ -266,10 +185,6 @@ const ConfirmationDialogBox = ({
           </Box>
         )}
       </DialogContent>
-      {/* <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose}>Subscribe</Button>
-            </DialogActions> */}
     </Dialog>
   );
 };

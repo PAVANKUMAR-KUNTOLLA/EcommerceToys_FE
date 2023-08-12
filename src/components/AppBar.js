@@ -79,10 +79,9 @@ const ResponsiveAppBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSearchOn = useSelector((state) => state.products.isSearchOn);
-  const isLoadingSpin = useSelector((state) => state.products.isSearchLoading);
 
   const handleNavMenu = (value) => {
-    let path = `/app/${value}`;
+    let path = value;
     navigate(path);
   };
 

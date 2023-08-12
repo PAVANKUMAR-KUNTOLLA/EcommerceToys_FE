@@ -65,8 +65,8 @@ const customFooterStyles = makeStyles((theme) => ({
     width: "250px",
     [theme.breakpoints.down("sm")]: {
       height: "40px",
-      width: "160px",
-      marginLeft: "-20px",
+      width: "150px",
+      marginLeft: "-30px",
     },
   },
 }));

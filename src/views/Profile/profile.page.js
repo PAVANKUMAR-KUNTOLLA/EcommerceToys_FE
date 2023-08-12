@@ -74,6 +74,8 @@ const customProfileStyles = makeStyles((theme) => ({
 const ProfilePage = () => {
   const navigate = useNavigate();
 
+  const [scrollEl, setScrollEl] = useState();
+
   const customStyles = customProfileStyles();
   const dispatch = useDispatch();
   const [userInfo, setUserInfo] = useState({
@@ -105,8 +107,8 @@ const ProfilePage = () => {
             id: info.id,
             name: info.name,
             email: info.email,
-            orderHistory: info.orders,
-            visitHistory: info.products,
+            orderHistory: info.order_history,
+            visitHistory: info.history,
           }));
         }
       })
@@ -125,6 +127,12 @@ const ProfilePage = () => {
       children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
     };
   }
+
+  useEffect(() => {
+    if (scrollEl) {
+      scrollEl.scrollTop = 100;
+    }
+  }, [scrollEl]);
 
   useEffect(() => {
     handleFetchProfileData();
@@ -158,14 +166,21 @@ const ProfilePage = () => {
             Order History
           </Typography>
 
-          <TableContainer component={Paper} sx={{ marginTop: "35px" }}>
-            <PerfectScrollbar style={{ maxHeight: "350px" }}>
+          <TableContainer
+            component={Paper}
+            sx={{ marginTop: "35px", maxHeight: "350px" }}
+          >
+            <PerfectScrollbar
+              containerRef={(ref) => {
+                setScrollEl(ref);
+              }}
+            >
               <Table sx={{ maxWidth: "sm" }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">Title</TableCell>
                     <TableCell align="left">Quantity</TableCell>
-                    <TableCell align="left">Ordered Date</TableCell>
+                    <TableCell align="left">Date</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -200,9 +215,14 @@ const ProfilePage = () => {
             component={Paper}
             sx={{
               marginTop: "20px",
+              maxHeight: "350px",
             }}
           >
-            <PerfectScrollbar style={{ maxHeight: "350px" }}>
+            <PerfectScrollbar
+              containerRef={(ref) => {
+                setScrollEl(ref);
+              }}
+            >
               <Table sx={{ maxWidth: "md" }} aria-label="simple table">
                 <TableHead>
                   <TableRow>

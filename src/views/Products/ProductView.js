@@ -11,22 +11,12 @@ import {
   CircularProgress,
   Grid,
 } from "@mui/material";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
-// import NavbarHeader from "../../components/navbar";
 import { makeStyles } from "@mui/styles";
 
 import { privateApiGET, privateApiPOST } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setProducts,
-  setLoadingSpin,
-  setSearch,
-} from "../../redux/products/produtsSlice";
-import LoadingSpin from "../../components/LoadingSpin";
-import DataNotFound from "../../components/DataNotFound";
-import ProductCard from "../../components/card";
-import SearchResultsPage from "../../components/SearchResults";
+import { setProducts, setSearch } from "../../redux/products/produtsSlice";
 import ProductSlider from "../../components/slider";
 import { thousands_separators } from "../../utils";
 
@@ -168,35 +158,12 @@ const ProductViewPage = () => {
       )
     : [];
   const [currentSlide, setCurrentSlide] = useState(0);
-  const isLoadingSpin = useSelector((state) => state.products.isLoadingSpin);
-  const searchQuery = useSelector((state) => state.products.searchQuery);
-  const isSearchOn = useSelector((state) => state.products.isSearchOn);
   const [isFavLoadingSpin, setIsFavLoadingSpin] = useState(false);
   const [isCartLoadingSpin, setIsCartLoadingSpin] = useState(false);
   const customStyles = productViewCustomStyles();
 
   const handleSlide = (index) => {
     setCurrentSlide(index);
-  };
-
-  const handleFetchProducts = () => {
-    dispatch(setLoadingSpin(true));
-    privateApiGET(Api.products)
-      .then((response) => {
-        const { status, data } = response;
-        if (status === 200) {
-          console.log("data", data);
-          dispatch(setProducts(data?.data));
-          if (params.id) {
-            handleRecordVisitHistory();
-          }
-          dispatch(setLoadingSpin(false));
-        }
-      })
-      .catch((error) => {
-        console.log("Error", error);
-        dispatch(setLoadingSpin(false));
-      });
   };
 
   const handleRecordVisitHistory = () => {
@@ -260,16 +227,12 @@ const ProductViewPage = () => {
 
   useEffect(() => {
     dispatch(setSearch(false));
-    if (products.length === 0) {
-      handleFetchProducts();
-    } else {
-      handleRecordVisitHistory();
-    }
+    handleRecordVisitHistory();
   }, []);
 
   return (
     <Page title="products">
-      {products.length > 0 && !isLoadingSpin && !isSearchOn && currProduct ? (
+      {products.length > 0 && currProduct ? (
         <Box sx={{ marginTop: "10px" }}>
           <Box className={customStyles.mainBlock}>
             <Box className={customStyles.leftBlock}>
@@ -375,8 +338,6 @@ const ProductViewPage = () => {
             </Box>
           )}
         </Box>
-      ) : !isLoadingSpin && isSearchOn && products.length > 0 ? (
-        <SearchResultsPage />
       ) : null}
     </Page>
   );

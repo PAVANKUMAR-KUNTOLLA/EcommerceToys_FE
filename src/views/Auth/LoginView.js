@@ -13,6 +13,7 @@ import {
   DialogContentText,
   DialogTitle,
   CircularProgress,
+  Avatar,
 } from "@mui/material";
 
 import { makeStyles } from "@mui/styles";

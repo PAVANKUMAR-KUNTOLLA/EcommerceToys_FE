@@ -70,6 +70,15 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
         const { status, data } = response;
         if (status === 200) {
           console.log("data", data);
+          dispatch(setProducts(data?.data));
+
+          setShowAlert(true);
+
+          // Navigate to home page after 5 seconds
+          setTimeout(() => {
+            setShowAlert(false);
+            handleNav("home");
+          }, 3000);
         }
       })
       .catch((error) => {
@@ -82,45 +91,14 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
     navigate(path);
   };
 
-  const handleFetchProducts = () => {
-    dispatch(setLoadingSpin(true));
-    privateApiGET(Api.products)
-      .then((response) => {
-        const { status, data } = response;
-        if (status === 200) {
-          console.log("data", data);
-          dispatch(setProducts(data?.data));
-          dispatch(setLoadingSpin(false));
-        }
-      })
-      .catch((error) => {
-        console.log("Error", error);
-        dispatch(setLoadingSpin(false));
-      });
-  };
-
   const handlePlaceOrder = () => {
     // Display the success alert
     const arrayOfArrayIds = cart.map((item) => {
       return { id: item.id };
     });
 
-    console.log(arrayOfArrayIds);
-    console.log("cart inside", cart);
     handleEditPlaceOrder(arrayOfArrayIds);
-
-    setShowAlert(true);
-
-    // Navigate to home page after 5 seconds
-    setTimeout(() => {
-      setShowAlert(false);
-      handleNav("home");
-    }, 3000);
   };
-
-  useEffect(() => {
-    handleFetchProducts();
-  }, []);
 
   return (
     <Box maxWidth="lg" className={customStyles.MainBlock}>
@@ -303,8 +281,7 @@ const PlaceOrderStep = ({ address, paymentMethod }) => {
           }}
         >
           <AlertTitle>Sucessfull</AlertTitle>
-          You're order placed sucessfully —{" "}
-          <strong> Please check it out!</strong>
+          Your order placed sucessfully — <strong> Please check it out!</strong>
         </Alert>
       )}
     </Box>

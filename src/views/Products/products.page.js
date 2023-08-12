@@ -29,7 +29,6 @@ import {
   setSearch,
 } from "../../redux/products/produtsSlice";
 import LoadingSpin from "../../components/LoadingSpin";
-import SearchResultsPage from "../../components/SearchResults";
 import { useParams, useNavigate } from "react-router-dom";
 export const useStyles = makeStyles((theme) => ({
   mainBlock: {
@@ -68,8 +67,6 @@ const ProductsPage = () => {
     price: null,
   });
   const [expanded, setExpanded] = useState(false);
-  const searchQuery = useSelector((state) => state.products.searchQuery);
-  const isSearchOn = useSelector((state) => state.products.isSearchOn);
   const isLoadingSpin = useSelector((state) => state.products.isSearchLoading);
 
   const handleFetchProducts = () => {
@@ -180,8 +177,6 @@ const ProductsPage = () => {
     if (params.category) {
       let data = { category: params.category };
       handleFetchFilterProducts(data);
-    } else {
-      handleFetchProducts();
     }
   }, []);
 
@@ -291,8 +286,6 @@ const ProductsPage = () => {
                   );
                 })}
             </Grid>
-          ) : isSearchOn && !isLoadingSpin ? (
-            <SearchResultsPage />
           ) : isLoadingSpin ? (
             <LoadingSpin isBackdrop={true} />
           ) : null}

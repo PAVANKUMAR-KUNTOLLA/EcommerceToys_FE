@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
-import ProductCard from "../../components/card";
 import CategoriesCard from "../../components/categoryCard";
 import ProductSlider from "../../components/slider";
 import { Box, Container, Grid, Typography } from "@mui/material";
@@ -9,15 +8,9 @@ import { makeStyles } from "@mui/styles";
 import Api from "../../components/Api";
 import { privateApiGET } from "../../components/PrivateRoute";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setProducts,
-  setLoadingSpin,
-  setSearch,
-} from "../../redux/products/produtsSlice";
-import LoadingSpin from "../../components/LoadingSpin";
+import { setProducts, setLoadingSpin } from "../../redux/products/produtsSlice";
 import MyFooter from "./Footer";
 import AdverstiesmentImagesSlider from "./Advertisement";
-import SearchResultsPage from "../../components/SearchResults";
 
 export const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,8 +42,6 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products.products);
   const favourites = useSelector((state) => state.products.favourites);
-  const isLoadingSpin = useSelector((state) => state.products.isLoadingSpin);
-  const isSearchOn = useSelector((state) => state.products.isSearchOn);
 
   const selectedCategories = new Set();
   const categoriesItems = products
@@ -83,15 +74,10 @@ const HomePage = () => {
       });
   };
 
-  useEffect(() => {
-    handleFetchProducts();
-    dispatch(setSearch(false));
-  }, []);
-
   return (
     <Page title="home">
-      {!isSearchOn && <AdverstiesmentImagesSlider />}
-      {!isLoadingSpin && !isSearchOn ? (
+      <AdverstiesmentImagesSlider />
+      {products.length > 0 && (
         <Container maxWidth="md" className={customStyles.container}>
           {favourites.length > 0 && (
             <Grid container spacing={2} mt={3}>
@@ -120,28 +106,10 @@ const HomePage = () => {
               ))}
             </Grid>
           </Grid>
-
-          <Grid
-            container
-            spacing={2}
-            mt={3}
-            sx={{ display: isSearchOn ? "none" : "flex" }}
-          >
-            <Grid item xs={12}>
-              <Typography className={customStyles.title}>
-                you may also like
-              </Typography>
-            </Grid>
-            <ProductSlider products={products} />
-          </Grid>
         </Container>
-      ) : isLoadingSpin ? (
-        <LoadingSpin isBackdrop={true} />
-      ) : isSearchOn ? (
-        <SearchResultsPage customStyles={customStyles} />
-      ) : null}
+      )}
 
-      {!isLoadingSpin && <MyFooter />}
+      <MyFooter />
       <Box
         sx={{
           textAlign: "center",
