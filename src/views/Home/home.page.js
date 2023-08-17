@@ -87,11 +87,6 @@ const HomePage = () => {
                 </Typography>
               </Grid>
               <ProductSlider products={favourites} />
-              {/* {favourites.map((product) => (
-                <Grid item key={product.id} xs={6} md={3} lg={3}>
-                  <ProductCard product={product} />
-                </Grid>
-              ))} */}
             </Grid>
           )}
           <Grid container spacing={2} mt={2}>
@@ -106,21 +101,22 @@ const HomePage = () => {
               ))}
             </Grid>
           </Grid>
+          <Grid container spacing={2} mt={3}>
+            <Grid item xs={12}>
+              <Typography className={customStyles.title}>
+                You May Like
+              </Typography>
+              <ProductSlider
+                products={products.filter(
+                  (product, id) => product.is_favourite === false
+                )}
+              />
+            </Grid>
+          </Grid>
         </Container>
       )}
 
       <MyFooter />
-      <Box
-        sx={{
-          textAlign: "center",
-          marginRight: "auto",
-          marginLeft: "auto",
-          paddingTop: "24px",
-          paddingBottom: "24px",
-        }}
-      >
-        Copyright 2023 © @kuntollapavankumar
-      </Box>
     </Page>
   );
 };

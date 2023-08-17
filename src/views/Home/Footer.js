@@ -51,7 +51,9 @@ export const footercardStyles = makeStyles((theme) => ({
     width: "100%",
     height: "40vh",
     marginLeft: "auto",
-    [theme.breakpoints.down("sm")]: {},
+    [theme.breakpoints.down("md")]: {
+      height: "30vh",
+    },
   },
   title: {
     textTransform: "uppercase",
@@ -83,8 +85,13 @@ export const footercardStyles = makeStyles((theme) => ({
     marginRight: "auto",
     marginLeft: "auto",
     paddingTop: "100px",
+    [theme.breakpoints.down("md")]: {
+      paddingTop: "40px",
+      width: "40vw",
+    },
     [theme.breakpoints.down("sm")]: {
       paddingTop: "10px",
+      width: "80vw",
     },
   },
   subTitle: {

@@ -23,12 +23,7 @@ import {
   priceRangesList,
 } from "../../constants/index";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setProducts,
-  setLoadingSpin,
-  setSearch,
-} from "../../redux/products/produtsSlice";
-import LoadingSpin from "../../components/LoadingSpin";
+import { setProducts } from "../../redux/products/produtsSlice";
 import { useParams, useNavigate } from "react-router-dom";
 export const useStyles = makeStyles((theme) => ({
   mainBlock: {
@@ -67,27 +62,31 @@ const ProductsPage = () => {
     price: null,
   });
   const [expanded, setExpanded] = useState(false);
-  const isLoadingSpin = useSelector((state) => state.products.isSearchLoading);
+  const [loadingSpin, setLoadingSpin] = useState(false);
+
+  const categoryProducts = products.filter(
+    (product) => product.category === params.category
+  );
 
   const handleFetchProducts = () => {
-    dispatch(setLoadingSpin(true));
+    setLoadingSpin(true);
     privateApiGET(Api.products)
       .then((response) => {
         const { status, data } = response;
         if (status === 200) {
           console.log("data", data);
           dispatch(setProducts(data?.data));
-          dispatch(setLoadingSpin(false));
+          setLoadingSpin(false);
         }
       })
       .catch((error) => {
         console.log("Error", error);
-        dispatch(setLoadingSpin(false));
+        setLoadingSpin(false);
       });
   };
 
   const handleFetchFilterProducts = (data) => {
-    dispatch(setLoadingSpin(true));
+    setLoadingSpin(true);
     let payload = data;
     privateApiPOST(Api.products, payload)
       .then((response) => {
@@ -95,7 +94,7 @@ const ProductsPage = () => {
         if (status === 200) {
           console.log("data", data);
           dispatch(setProducts(data?.data));
-          dispatch(setLoadingSpin(false));
+          setLoadingSpin(false);
           if ("category" in payload && params.payload != payload["category"]) {
             navigate(`/app/products/categories/${payload["category"]}`);
           }
@@ -103,7 +102,7 @@ const ProductsPage = () => {
       })
       .catch((error) => {
         console.log("Error", error);
-        dispatch(setLoadingSpin(false));
+        setLoadingSpin(false);
       });
   };
 
@@ -171,14 +170,6 @@ const ProductsPage = () => {
       navigate("/app/products");
     }
   };
-
-  useEffect(() => {
-    dispatch(setSearch(false));
-    if (params.category) {
-      let data = { category: params.category };
-      handleFetchFilterProducts(data);
-    }
-  }, []);
 
   return (
     <Page title="products">
@@ -271,23 +262,26 @@ const ProductsPage = () => {
           </Accordion>
         </Container>
         <Container maxWidth="md" className={customStyles.container}>
-          {((params.category &&
-            products.length > 0 &&
-            products[0].category === params.category) ||
-            (!params.category && products.length > 0)) &&
-          !isLoadingSpin ? (
+          {params.category && products.length > 0 && !loadingSpin ? (
             <Grid container spacing={2} mt={2}>
-              {products.length > 0 &&
-                products.map((product, id) => {
-                  return (
-                    <Grid item key={id} xs={6} md={4}>
-                      <ProductCard key={id} product={product} />
-                    </Grid>
-                  );
-                })}
+              {categoryProducts.map((product, id) => {
+                return (
+                  <Grid item key={id} xs={6} md={4}>
+                    <ProductCard key={id} product={product} />
+                  </Grid>
+                );
+              })}
             </Grid>
-          ) : isLoadingSpin ? (
-            <LoadingSpin isBackdrop={true} />
+          ) : !params.category && products.length > 0 && !loadingSpin ? (
+            <Grid container spacing={2} mt={2}>
+              {products.map((product, id) => {
+                return (
+                  <Grid item key={id} xs={6} md={4}>
+                    <ProductCard key={id} product={product} />
+                  </Grid>
+                );
+              })}
+            </Grid>
           ) : null}
         </Container>
       </Container>

@@ -10,10 +10,26 @@ import {
   setSearch,
   setLoadingSpin,
 } from "../redux/products/produtsSlice";
+import { setSessionState } from "../redux/app/appSlice";
 import Api from "../components/Api";
 import { privateApiGET } from "../components/PrivateRoute";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles((theme) => ({
+  footer: {
+    textAlign: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+    paddingTop: "24px",
+    paddingBottom: "24px",
+    positon: "absolute",
+    bottom: 0,
+  },
+}));
 
 const AppLayout = () => {
+  const customStyles = useStyles();
+  const { initialAppLoading } = useSelector((state) => state.app);
   const dispatch = useDispatch();
   const location = useLocation();
   const products = useSelector((state) => state.products.products);
@@ -47,11 +63,23 @@ const AppLayout = () => {
     }
   }, [location.pathname]);
 
+  useEffect(() => {
+    dispatch(setSessionState(true));
+  });
+
   return (
     <>
-      <ResponsiveAppBar />
-      {!isSearchOn ? <Outlet /> : <SearchResultsPage />}
-      {/* <MobileNavFooterPage /> */}
+      {!initialAppLoading && (
+        <div>
+          <div>
+            <ResponsiveAppBar />
+          </div>
+          <div>{!isSearchOn ? <Outlet /> : <SearchResultsPage />}</div>
+          {/* <div className={customStyles.footer}>
+            Copyright 2023 © @kuntollapavankumar
+          </div> */}
+        </div>
+      )}
     </>
   );
 };

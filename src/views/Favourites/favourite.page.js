@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Page from "../../components/Page";
 import ProductCard from "../../components/card";
 import { Typography } from "@mui/material";
-import { Grid, Container } from "@mui/material";
+import { Box, Grid, Container, Alert, Link } from "@mui/material";
 import { privateApiGET } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
 import {
@@ -12,6 +12,8 @@ import {
 } from "../../redux/products/produtsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@mui/styles";
+import ProductSlider from "../../components/slider";
+import { useNavigate } from "react-router-dom";
 
 export const customFavouriteStyles = makeStyles((theme) => ({
   container: {
@@ -38,8 +40,10 @@ export const customFavouriteStyles = makeStyles((theme) => ({
 
 const FavouritePage = () => {
   const customStyles = customFavouriteStyles();
+  const products = useSelector((state) => state.products.products);
   const favourites = useSelector((state) => state.products.favourites);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleFetchProducts = () => {
     privateApiGET(Api.products)
@@ -58,20 +62,46 @@ const FavouritePage = () => {
 
   return (
     <Page title="Favourites">
-      <Container maxWidth="md" className={customStyles.container}>
-        <Typography className={customStyles.title}>Wishlist</Typography>
-        <hr bordertop="2px solid black" fontWeight="bold"></hr>
-        <Grid container spacing={2} mt={2}>
-          {favourites &&
-            favourites.map((product, id) => {
-              return (
-                <Grid item key={id} xs={6} md={4}>
-                  <ProductCard key={id} product={product} />
-                </Grid>
-              );
-            })}
-        </Grid>
-      </Container>
+      {products.length > 0 ? (
+        <Container maxWidth="md" className={customStyles.container}>
+          {favourites.length > 0 ? (
+            <Box>
+              <Typography className={customStyles.title}>Favourites</Typography>
+              <hr bordertop="2px solid black" fontWeight="bold"></hr>
+              <Grid container spacing={2} mt={2}>
+                {favourites.map((product, id) => {
+                  return (
+                    <Grid item key={id} xs={6} md={4}>
+                      <ProductCard key={id} product={product} />
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Box>
+          ) : (
+            <Container maxWidth="sm" className={customStyles.container}>
+              <Alert severity="info" sx={{ marginTop: { xs: "3%", sm: "5%" } }}>
+                Your Favourites is Empty{" "}
+                <Link onClick={() => navigate("/app/products")}>
+                  View Products
+                </Link>
+              </Alert>
+            </Container>
+          )}
+          <Grid container spacing={2} mt={3}>
+            <Grid item xs={12}>
+              <Typography className={customStyles.title}>
+                You May Like
+              </Typography>
+              <ProductSlider
+                products={products.filter(
+                  (product, id) => product.is_favourite === false
+                )}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      ) : null}
     </Page>
   );
 };

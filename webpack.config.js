@@ -17,6 +17,7 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
+    disableHostCheck: true,
     proxy: {
       "/users/api/v1": {
         target: "http://127.0.0.1:8000",

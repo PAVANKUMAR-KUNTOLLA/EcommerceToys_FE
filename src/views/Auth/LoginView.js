@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 
 import { makeStyles } from "@mui/styles";
-
+import { useSelector } from "react-redux";
 import CustomAlert from "../../components/CustomAlert";
 
 import * as Yup from "yup";
@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const LoginView = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const isSessionActive = useSelector((state) => state.app.isSessionActive);
 
   const [showAlert, setShowAlert] = useState({
     isAlert: false,
@@ -169,7 +170,11 @@ const LoginView = () => {
                         res.data?.data?.token
                       );
                       setSubmitting(false);
-                      navigate("/");
+                      if (isSessionActive) {
+                        navigate(-1);
+                      } else {
+                        navigate("/");
+                      }
                     }
                   })
                   .catch((error) => {

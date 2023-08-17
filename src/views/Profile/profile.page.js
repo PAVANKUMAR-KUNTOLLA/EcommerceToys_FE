@@ -135,125 +135,140 @@ const ProfilePage = () => {
   }, [scrollEl]);
 
   useEffect(() => {
-    handleFetchProfileData();
+    if (localStorage.getItem("token")) {
+      handleFetchProfileData();
+    }
   }, []);
 
   return (
     <Page title="Profile">
-      <Container maxWidth="md" className={customStyles.mainBlock}>
-        <Box className={customStyles.account}>
-          {userInfo.name && (
-            <Avatar
-              {...stringAvatar(userInfo.name)}
+      {localStorage.getItem("token") ? (
+        <Container maxWidth="md" className={customStyles.mainBlock}>
+          <Box className={customStyles.account}>
+            {userInfo.name && (
+              <Avatar
+                {...stringAvatar(userInfo.name)}
+                sx={{
+                  width: "100px",
+                  height: "100px",
+                  fontSize: "48px",
+                  color: "white",
+                  backgroundColor: "rgb(0,76,153,0.8)",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              />
+            )}
+            <Typography className={customStyles.title}>
+              {userInfo.name}
+            </Typography>
+          </Box>
+
+          <Box maxWidth={"sm"} sx={{ marginLeft: "auto", marginRight: "auto" }}>
+            <Typography className={customStyles.subTitle}>
+              Order History
+            </Typography>
+
+            <TableContainer
+              component={Paper}
+              sx={{ marginTop: "35px", maxHeight: "350px" }}
+            >
+              <PerfectScrollbar
+                containerRef={(ref) => {
+                  setScrollEl(ref);
+                }}
+              >
+                <Table sx={{ maxWidth: "sm" }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left">Title</TableCell>
+                      <TableCell align="left">Quantity</TableCell>
+                      <TableCell align="left">Date</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {userInfo["orderHistory"].map((row) => (
+                      <TableRow
+                        key={row.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleProductView(row.id, row.title)}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.title}
+                        </TableCell>
+                        <TableCell align="left">{row.quantity}</TableCell>
+                        <TableCell align="left">{row.order_date}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </PerfectScrollbar>
+            </TableContainer>
+          </Box>
+
+          <Box maxWidth={"sm"} sx={{ marginLeft: "auto", marginRight: "auto" }}>
+            <Typography className={customStyles.subTitle}>
+              Recently Visited
+            </Typography>
+
+            <TableContainer
+              component={Paper}
               sx={{
-                width: "100px",
-                height: "100px",
-                fontSize: "48px",
-                color: "white",
-                backgroundColor: "rgb(0,76,153,0.8)",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            />
-          )}
-          <Typography className={customStyles.title}>
-            {userInfo.name}
-          </Typography>
-        </Box>
-
-        <Box maxWidth={"sm"} sx={{ marginLeft: "auto", marginRight: "auto" }}>
-          <Typography className={customStyles.subTitle}>
-            Order History
-          </Typography>
-
-          <TableContainer
-            component={Paper}
-            sx={{ marginTop: "35px", maxHeight: "350px" }}
-          >
-            <PerfectScrollbar
-              containerRef={(ref) => {
-                setScrollEl(ref);
+                marginTop: "20px",
+                maxHeight: "350px",
               }}
             >
-              <Table sx={{ maxWidth: "sm" }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Title</TableCell>
-                    <TableCell align="left">Quantity</TableCell>
-                    <TableCell align="left">Date</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {userInfo["orderHistory"].map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        cursor: "pointer",
-                      }}
-                      onClick={() => handleProductView(row.id, row.title)}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.title}
-                      </TableCell>
-                      <TableCell align="left">{row.quantity}</TableCell>
-                      <TableCell align="left">{row.order_date}</TableCell>
+              <PerfectScrollbar
+                containerRef={(ref) => {
+                  setScrollEl(ref);
+                }}
+              >
+                <Table sx={{ maxWidth: "md" }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left">Title</TableCell>
+                      <TableCell align="left">Count</TableCell>
+                      <TableCell align="left">Viewed_at</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </PerfectScrollbar>
-          </TableContainer>
-        </Box>
-
-        <Box maxWidth={"sm"} sx={{ marginLeft: "auto", marginRight: "auto" }}>
-          <Typography className={customStyles.subTitle}>
-            Recently Visited
-          </Typography>
-
-          <TableContainer
-            component={Paper}
-            sx={{
-              marginTop: "20px",
-              maxHeight: "350px",
-            }}
-          >
-            <PerfectScrollbar
-              containerRef={(ref) => {
-                setScrollEl(ref);
-              }}
-            >
-              <Table sx={{ maxWidth: "md" }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Title</TableCell>
-                    <TableCell align="left">Count</TableCell>
-                    <TableCell align="left">Viewed_at</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {userInfo["visitHistory"].map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        cursor: "pointer",
-                      }}
-                      onClick={() => handleProductView(row.id, row.title)}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.title}
-                      </TableCell>
-                      <TableCell align="left">{row.view_count}</TableCell>
-                      <TableCell align="left">{row.visited_at}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </PerfectScrollbar>
-          </TableContainer>
-        </Box>
-      </Container>
+                  </TableHead>
+                  <TableBody>
+                    {userInfo["visitHistory"].map((row) => (
+                      <TableRow
+                        key={row.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleProductView(row.id, row.title)}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.title}
+                        </TableCell>
+                        <TableCell align="left">{row.view_count}</TableCell>
+                        <TableCell align="left">{row.visited_at}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </PerfectScrollbar>
+            </TableContainer>
+          </Box>
+        </Container>
+      ) : !localStorage.getItem("token") ? (
+        <Container maxWidth="md">
+          <Grid item xs={12} sx={{ textAlign: "center", marginTop: "25%" }}>
+            <Typography sx={{ marginBottom: "20px" }}>
+              Please sigin to view profile
+            </Typography>
+            <Button variant="contained" onClick={() => navigate("/login")}>
+              Click here to login
+            </Button>
+          </Grid>
+        </Container>
+      ) : null}
     </Page>
   );
 };

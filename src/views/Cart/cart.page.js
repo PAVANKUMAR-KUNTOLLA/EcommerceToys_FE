@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { privateApiGET, privateApiPOST } from "../../components/PrivateRoute";
 import Api from "../../components/Api";
 import { setProducts, setLoadingSpin } from "../../redux/products/produtsSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -323,7 +323,7 @@ const CartPage = () => {
               </Grid>
             ))
           ) : (
-            <Message>No items in cart.</Message>
+            <Message>Your Cart is Empty.</Message>
           )}
         </Container>
         <Container
@@ -386,7 +386,8 @@ const CartPage = () => {
               shop more
             </Button>
 
-            {cart
+            {localStorage.getItem("token") &&
+            cart
               .reduce((acc, item) => acc + item.quantity * item.price, 0)
               .toFixed(2) > 0 ? (
               <Button variant="contained" onClick={() => handleNav("checkout")}>
@@ -396,6 +397,15 @@ const CartPage = () => {
               <Button disabled>CHECKOUT</Button>
             )}
           </Box>
+          {!localStorage.getItem("token") ? (
+            <Button
+              variant="contained"
+              sx={{ marginTop: "16px" }}
+              onClick={() => navigate("/login")}
+            >
+              Proceed to login
+            </Button>
+          ) : null}
         </Container>
       </Box>
 

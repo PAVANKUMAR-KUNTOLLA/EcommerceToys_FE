@@ -41,14 +41,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate replace to={config.defaultPath} />} />
-      <Route
-        path="app"
-        element={
-          <PrivateRoute>
-            <AppLayout />
-          </PrivateRoute>
-        }
-      >
+      <Route path="app" element={<AppLayout />}>
         <Route path="home" element={<HomePage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route
@@ -57,9 +50,18 @@ const AppRoutes = () => {
         />
         <Route path="products/:id/:title" element={<ProductViewPage />} />
         <Route path="favourites" element={<FavouritePage />} />
-        <Route path="checkout" element={<CheckOutPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="profile" element={<ProfilePage />} />
+      </Route>
+      <Route
+        path="app"
+        element={
+          <PrivateRoute>
+            <AppLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route path="checkout" element={<CheckOutPage />} />
       </Route>
       <Route path="/login" element={<LoginViewPage />} />
       <Route path="/register" element={<RegisterView />} />

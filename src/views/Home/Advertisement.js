@@ -15,7 +15,7 @@ const AdverstismentCustomStyles = makeStyles((theme) => ({
     alignContent: "center",
     justifyContent: "space-between",
     [theme.breakpoints.down("sm")]: {
-      height: "50vh",
+      height: "40vh",
     },
   },
   prevSvgIcon: {
@@ -81,7 +81,7 @@ const AdverstiesmentImagesSlider = () => {
               src={images[currentSlide]}
               alt={`Slide ${currentSlide + 1}`}
             />
-            <svg
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               className={`${customStyles.prevSvgIcon} icon icon-tabler icon-tabler-chevron-left`}
               width="84"
@@ -112,7 +112,7 @@ const AdverstiesmentImagesSlider = () => {
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M9 6l6 6l-6 6" />
-            </svg>
+            </svg> */}
           </Box>
         </Box>
       </Container>
